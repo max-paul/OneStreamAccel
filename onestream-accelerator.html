@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OneStream Accelerator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0f11;
+    --bg2: #16181c;
+    --bg3: #1e2026;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --accent: #4f8ef7;
+    --accent2: #2563eb;
+    --text: #f0f2f5;
+    --text2: #9ba3b0;
+    --text3: #6b7280;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --phase1: #4f8ef7;
+    --phase2: #a78bfa;
+    --phase3: #34d399;
+    --phase4: #f59e0b;
+    --phase5: #fb923c;
+    --phase6: #f472b6;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
+  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 0; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .main { padding: 2rem 2.5rem; overflow-y: auto; }
+  .sidebar-header { padding: 1.5rem 1.25rem 1rem; border-bottom: 1px solid var(--border); }
+  .logo { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+  .logo span { color: var(--accent); }
+  .project-name { font-size: 11px; color: var(--text3); margin-top: 4px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+  .phase-group { padding: 0.75rem 0; }
+  .phase-label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); padding: 0 1.25rem 0.4rem; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 0.45rem 1.25rem; cursor: pointer; font-size: 13px; color: var(--text2); transition: all 0.15s; position: relative; }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: var(--text); background: rgba(79,142,247,0.1); }
+  .nav-item.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--accent); border-radius: 0 2px 2px 0; }
+  .nav-dot { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--text3); flex-shrink: 0; transition: all 0.15s; }
+  .nav-dot.done { background: var(--success); border-color: var(--success); }
+  .nav-dot.active { background: var(--accent); border-color: var(--accent); }
+  .sidebar-footer { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border); }
+  .progress-bar-wrap { background: var(--bg3); border-radius: 99px; height: 4px; overflow: hidden; margin-top: 6px; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #a78bfa); border-radius: 99px; transition: width 0.4s ease; }
+  .progress-label { font-size: 11px; color: var(--text3); display: flex; justify-content: space-between; }
+  .page-header { margin-bottom: 2rem; }
+  .breadcrumb { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .page-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+  .page-subtitle { font-size: 13px; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+  .form-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; }
+  .form-card-title { font-size: 12px; font-weight: 500; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+  .form-card-title i { font-size: 15px; color: var(--accent); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 12px; color: var(--text2); font-weight: 500; }
+  input[type="text"], input[type="number"], select, textarea {
+    background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); padding: 0.55rem 0.75rem;
+    color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border 0.15s; width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+  select option { background: var(--bg3); }
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 6px; background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius); padding: 6px 8px; min-height: 42px; cursor: text; }
+  .tags-wrap:focus-within { border-color: var(--accent); }
+  .tag { background: rgba(79,142,247,0.15); color: var(--accent); font-size: 12px; padding: 2px 8px; border-radius: 99px; display: flex; align-items: center; gap: 4px; }
+  .tag button { background: none; border: none; color: var(--accent); cursor: pointer; padding: 0; font-size: 14px; line-height: 1; opacity: 0.7; }
+  .tag button:hover { opacity: 1; }
+  .tags-input { background: transparent; border: none; outline: none; color: var(--text); font-size: 13px; min-width: 80px; flex: 1; font-family: 'Inter', sans-serif; padding: 2px 0; }
+  .table-input { width: 100%; border-collapse: collapse; }
+  .table-input th { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px 8px; text-align: left; font-weight: 500; }
+  .table-input td { padding: 4px 4px; }
+  .table-input input, .table-input select { padding: 0.4rem 0.6rem; font-size: 12px; }
+  .add-row-btn { font-size: 12px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 6px 0; display: flex; align-items: center; gap: 5px; margin-top: 6px; }
+  .add-row-btn:hover { opacity: 0.8; }
+  .del-btn { background: none; border: none; color: var(--text3); cursor: pointer; padding: 4px; border-radius: 4px; transition: color 0.15s; }
+  .del-btn:hover { color: var(--danger); }
+  .actions-bar { display: flex; align-items: center; gap: 10px; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .btn { padding: 0.55rem 1.25rem; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 6px; font-family: 'Inter', sans-serif; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+  .btn-ghost { background: transparent; color: var(--text2); border-color: var(--border2); }
+  .btn-ghost:hover { background: var(--bg3); color: var(--text); }
+  .btn-warning { background: rgba(245,158,11,0.15); color: var(--warning); border-color: rgba(245,158,11,0.3); }
+  .btn-warning:hover { background: rgba(245,158,11,0.25); }
+  .saved-msg { font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 5px; opacity: 0; transition: opacity 0.3s; }
+  .saved-msg.show { opacity: 1; }
+  .xml-wrap { position: relative; }
+  .xml-box { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--radius); padding: 1rem 1.25rem; font-family: 'DM Mono', monospace; font-size: 11.5px; color: #7dd3fc; white-space: pre; overflow-x: auto; max-height: 400px; overflow-y: auto; line-height: 1.6; }
+  .copy-btn { position: absolute; top: 8px; right: 8px; background: var(--bg3); border: 1px solid var(--border2); color: var(--text2); border-radius: 6px; padding: 4px 10px; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .copy-btn:hover { color: var(--text); }
+  .overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .stat-val { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; color: var(--text); }
+  .stat-sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+  .phase-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .phase-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; cursor: pointer; transition: all 0.15s; }
+  .phase-card:hover { border-color: var(--border2); background: var(--bg3); }
+  .phase-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .phase-badge { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 99px; }
+  .phase-card-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .phase-card-steps { font-size: 12px; color: var(--text3); }
+  .phase-progress { margin-top: 12px; background: var(--bg3); border-radius: 99px; height: 3px; overflow: hidden; }
+  .phase-progress-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+  .tab-row { display: flex; gap: 2px; background: var(--bg3); border-radius: var(--radius); padding: 3px; margin-bottom: 1.5rem; width: fit-content; }
+  .tab-btn { padding: 0.4rem 1rem; border-radius: 7px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: transparent; color: var(--text2); transition: all 0.15s; font-family: 'Inter', sans-serif; }
+  .tab-btn.active { background: var(--bg2); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .summary-block { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .summary-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 1rem; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .summary-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key { color: var(--text2); }
+  .summary-val { color: var(--text); text-align: right; max-width: 60%; font-family: 'DM Mono', monospace; font-size: 12px; }
+  .next-banner { background: rgba(79,142,247,0.08); border: 1px solid rgba(79,142,247,0.2); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; }
+  .setup-wrap { max-width: 520px; margin: 4rem auto; }
+  .setup-logo { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .setup-logo span { color: var(--accent); }
+  .setup-sub { font-size: 14px; color: var(--text2); margin-bottom: 2.5rem; line-height: 1.6; }
+  .setup-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+  .import-area { border: 1px dashed var(--border2); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; cursor: pointer; transition: border-color 0.15s; }
+  .import-area:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script>
+const {useState, useEffect, useCallback, useRef} = React;
+const h = React.createElement;
+
+const PHASES = [
+  { id:'p1', label:'Foundation', color:'var(--phase1)', steps:['app-props','time-profile','scenario','currency'] },
+  { id:'p2', label:'Dimensions', color:'var(--phase2)', steps:['entity','accounts','flow-dim','ud-dims'] },
+  { id:'p3', label:'Cube Design', color:'var(--phase3)', steps:['cube-props','cube-dims'] },
+  { id:'p4', label:'Data & Integration', color:'var(--phase4)', steps:['data-source','transform','load-rules'] },
+  { id:'p5', label:'Workflow & Process', color:'var(--phase5)', steps:['workflow','certification','templates'] },
+  { id:'p6', label:'Security', color:'var(--phase6)', steps:['user-groups','roles','workflow-sec'] },
+];
+
+const STEPS = {
+  'app-props':    { phase:'p1', label:'Application properties', icon:'ti-building' },
+  'time-profile': { phase:'p1', label:'Time profile', icon:'ti-calendar' },
+  'scenario':     { phase:'p1', label:'Scenario setup', icon:'ti-layers-difference' },
+  'currency':     { phase:'p1', label:'Currency setup', icon:'ti-currency-dollar' },
+  'entity':       { phase:'p2', label:'Entity hierarchy', icon:'ti-sitemap' },
+  'accounts':     { phase:'p2', label:'Account structure', icon:'ti-list-details' },
+  'flow-dim':     { phase:'p2', label:'Flow dimension', icon:'ti-arrows-exchange' },
+  'ud-dims':      { phase:'p2', label:'UD1–UD8 dimensions', icon:'ti-tag' },
+  'cube-props':   { phase:'p3', label:'Cube properties', icon:'ti-box' },
+  'cube-dims':    { phase:'p3', label:'Cube dimensions', icon:'ti-grid-dots' },
+  'data-source':  { phase:'p4', label:'Data source setup', icon:'ti-database' },
+  'transform':    { phase:'p4', label:'Transformation rules', icon:'ti-transform' },
+  'load-rules':   { phase:'p4', label:'Data load rules', icon:'ti-upload' },
+  'workflow':     { phase:'p5', label:'Workflow profiles', icon:'ti-workflow' },
+  'certification':{ phase:'p5', label:'Certification setup', icon:'ti-certificate' },
+  'templates':    { phase:'p5', label:'Data collection templates', icon:'ti-template' },
+  'user-groups':  { phase:'p6', label:'User groups', icon:'ti-users-group' },
+  'roles':        { phase:'p6', label:'Role assignments', icon:'ti-shield-check' },
+  'workflow-sec': { phase:'p6', label:'Workflow security', icon:'ti-lock' },
+};
+
+const STEP_ORDER = Object.keys(STEPS);
+
+function useProject() {
+  const [project, setProject] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    try { const raw = localStorage.getItem('os_accelerator_v1'); if (raw) setProject(JSON.parse(raw)); } catch(e) {}
+    setLoaded(true);
+  }, []);
+  const save = useCallback((data) => {
+    setProject(data);
+    try { localStorage.setItem('os_accelerator_v1', JSON.stringify(data)); } catch(e) {}
+  }, []);
+  return { project, save, loaded };
+}
+
+function getCompletion(project) {
+  if (!project) return 0;
+  const filled = STEP_ORDER.filter(k => {
+    const d = project.steps?.[k];
+    if (!d) return false;
+    return Object.values(d).some(v => v && (Array.isArray(v) ? v.length > 0 : String(v).trim()));
+  });
+  return Math.round((filled.length / STEP_ORDER.length) * 100);
+}
+
+function getStepStatus(project, stepId) {
+  const d = project?.steps?.[stepId];
+  if (!d) return 'empty';
+  const vals = Object.values(d).filter(v => v && (Array.isArray(v) ? v.length > 0 : String(v).trim()));
+  return vals.length > 0 ? 'done' : 'empty';
+}
+
+function TblInput({cols, rows, onChange, addLabel}) {
+  const addRow = () => { const empty = {}; cols.forEach(c => empty[c.key] = c.default||''); onChange([...rows, empty]); };
+  const updateRow = (i, key, val) => onChange(rows.map((row,idx) => idx===i ? {...row,[key]:val} : row));
+  const delRow = (i) => onChange(rows.filter((_,idx)=>idx!==i));
+  return h('div', null,
+    h('table', {className:'table-input', style:{width:'100%'}},
+      h('thead', null, h('tr', null, ...cols.map(c=>h('th',{key:c.key},c.label)), h('th',null,''))),
+      h('tbody', null, rows.map((row,i)=>h('tr',{key:i},
+        ...cols.map(c=>h('td',{key:c.key},
+          c.type==='select'
+            ? h('select',{value:row[c.key]||'',onChange:e=>updateRow(i,c.key,e.target.value)}, ...(c.options||[]).map(o=>h('option',{key:o,value:o},o)))
+            : h('input',{type:'text',value:row[c.key]||'',placeholder:c.ph||'',onChange:e=>updateRow(i,c.key,e.target.value)})
+        )),
+        h('td',null,h('button',{className:'del-btn',type:'button',onClick:()=>delRow(i)},h('i',{className:'ti ti-trash'})))
+      )))
+    ),
+    h('button',{className:'add-row-btn',type:'button',onClick:addRow}, h('i',{className:'ti ti-plus'}), addLabel||'Add row')
+  );
+}
+
+/* ---- STEP FORMS ---- */
+function StepAppProps({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-building'}),'General'),h('div',{className:'form-grid'},h('div',{className:'form-group'},h('label',null,'App name'),h('input',{type:'text',value:d.name||'',placeholder:'e.g. FP&A Platform',onChange:e=>f('name',e.target.value)})),h('div',{className:'form-group'},h('label',null,'App ID'),h('input',{type:'text',value:d.appId||'',placeholder:'e.g. FPA_PROD',onChange:e=>f('appId',e.target.value)})),h('div',{className:'form-group full'},h('label',null,'Description'),h('textarea',{value:d.description||'',placeholder:'Describe the purpose...',onChange:e=>f('description',e.target.value)})),h('div',{className:'form-group'},h('label',null,'Default currency'),h('select',{value:d.currency||'USD',onChange:e=>f('currency',e.target.value)},['USD','EUR','GBP','JPY','AUD','CAD','CHF','CNY'].map(c=>h('option',{key:c,value:c},c)))),h('div',{className:'form-group'},h('label',null,'Consolidation method'),h('select',{value:d.consol||'Ownership',onChange:e=>f('consol',e.target.value)},['Ownership','Equity','Proportional','None'].map(c=>h('option',{key:c,value:c},c)))),h('div',{className:'form-group'},h('label',null,'Platform version'),h('select',{value:d.version||'9.x',onChange:e=>f('version',e.target.value)},['9.x','8.2','8.1','8.0'].map(c=>h('option',{key:c,value:c},c)))))));}
+
+function StepTimeProfile({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-calendar'}),'Time configuration'),h('div',{className:'form-grid'},h('div',{className:'form-group'},h('label',null,'Start year'),h('input',{type:'number',value:d.startYear||'',placeholder:'2020',onChange:e=>f('startYear',e.target.value)})),h('div',{className:'form-group'},h('label',null,'End year'),h('input',{type:'number',value:d.endYear||'',placeholder:'2030',onChange:e=>f('endYear',e.target.value)})),h('div',{className:'form-group'},h('label',null,'Period frequency'),h('select',{value:d.frequency||'Monthly',onChange:e=>f('frequency',e.target.value)},['Monthly','Quarterly','Weekly','Daily'].map(c=>h('option',{key:c,value:c},c)))),h('div',{className:'form-group'},h('label',null,'Fiscal year end'),h('select',{value:d.fyEnd||'December',onChange:e=>f('fyEnd',e.target.value)},['January','February','March','April','May','June','July','August','September','October','November','December'].map(c=>h('option',{key:c,value:c},c)))),h('div',{className:'form-group'},h('label',null,'Number of periods'),h('input',{type:'number',value:d.periods||'',placeholder:'12',onChange:e=>f('periods',e.target.value)})),h('div',{className:'form-group'},h('label',null,'Prior periods'),h('input',{type:'number',value:d.priorPeriods||'',placeholder:'3',onChange:e=>f('priorPeriods',e.target.value)})))));  }
+
+function StepScenario({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.scenarios||[{name:'Actual',type:'Actual',lock:'No'},{name:'Budget',type:'Budget',lock:'No'},{name:'Forecast',type:'Forecast',lock:'No'}];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-layers-difference'}),'Scenarios'),h(TblInput,{cols:[{key:'name',label:'Scenario name',ph:'e.g. Actual'},{key:'type',label:'Type',type:'select',options:['Actual','Budget','Forecast','Rolling Forecast','Variance']},{key:'lock',label:'Lock type',type:'select',options:['No','Year','Period','All']},{key:'desc',label:'Description',ph:'Optional'}],rows,onChange:r=>f('scenarios',r),addLabel:'Add scenario'})));}
+
+function StepCurrency({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.currencies||[{code:'USD',name:'US Dollar',default:'Yes'}];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-currency-dollar'}),'Currencies'),h(TblInput,{cols:[{key:'code',label:'ISO code',ph:'e.g. USD'},{key:'name',label:'Name',ph:'e.g. US Dollar'},{key:'default',label:'Reporting currency',type:'select',options:['Yes','No']}],rows,onChange:r=>f('currencies',r),addLabel:'Add currency'})),h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-refresh'}),'Translation settings'),h('div',{className:'form-grid'},h('div',{className:'form-group'},h('label',null,'Default rate type'),h('select',{value:d.rateType||'Closing',onChange:e=>f('rateType',e.target.value)},['Closing','Average','Historical','Custom'].map(c=>h('option',{key:c,value:c},c)))),h('div',{className:'form-group'},h('label',null,'Translation method'),h('select',{value:d.transMethod||'CTA',onChange:e=>f('transMethod',e.target.value)},['CTA','Retained Earnings','None'].map(c=>h('option',{key:c,value:c},c)))))));}
+
+function StepEntity({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.entities||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-sitemap'}),'Entity hierarchy'),h('div',{className:'form-group',style:{marginBottom:'1rem'}},h('label',null,'Top-level entity name'),h('input',{type:'text',value:d.topEntity||'',placeholder:'e.g. Total Company',onChange:e=>f('topEntity',e.target.value)})),h(TblInput,{cols:[{key:'name',label:'Entity name',ph:'e.g. US Operations'},{key:'parent',label:'Parent',ph:'e.g. Total Company'},{key:'currency',label:'Local currency',ph:'e.g. USD'},{key:'type',label:'Type',type:'select',options:['Base','Parent','ICP','Elimination']},{key:'consol',label:'Consol method',type:'select',options:['Owned','Equity','Proportional','None']}],rows,onChange:r=>f('entities',r),addLabel:'Add entity'})));}
+
+function StepAccounts({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.accounts||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-list-details'}),'Chart of accounts'),h(TblInput,{cols:[{key:'code',label:'Account code',ph:'e.g. 1000'},{key:'name',label:'Account name',ph:'e.g. Revenue'},{key:'type',label:'Account type',type:'select',options:['Revenue','Expense','Asset','Liability','Equity','Statistical','Flow']},{key:'flow',label:'Flow type',type:'select',options:['Flow','Balance','AverageBalance','EndBalance']},{key:'icp',label:'ICP enabled',type:'select',options:['No','Yes']},{key:'parent',label:'Parent account',ph:'e.g. Total Revenue'}],rows,onChange:r=>f('accounts',r),addLabel:'Add account'})));}
+
+function StepFlowDim({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.flows||[{name:'Opening',type:'Balance'},{name:'Movement',type:'Flow'},{name:'Closing',type:'Balance'}];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-arrows-exchange'}),'Flow members'),h(TblInput,{cols:[{key:'name',label:'Flow member',ph:'e.g. Opening'},{key:'type',label:'Type',type:'select',options:['Balance','Flow','Calculated']},{key:'desc',label:'Description',ph:'Optional'}],rows,onChange:r=>f('flows',r),addLabel:'Add flow member'})));}
+
+function StepUdDims({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.udDims||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-tag'}),'User-defined dimensions (UD1–UD8)'),h(TblInput,{cols:[{key:'ud',label:'Dimension',type:'select',options:['UD1','UD2','UD3','UD4','UD5','UD6','UD7','UD8']},{key:'name',label:'Business name',ph:'e.g. Cost Center'},{key:'purpose',label:'Purpose',ph:'e.g. Department tracking'},{key:'enabled',label:'Enabled',type:'select',options:['Yes','No']}],rows,onChange:r=>f('udDims',r),addLabel:'Add UD dimension'})));}
+
+function StepCubeProps({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.cubes||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-box'}),'Cubes'),h(TblInput,{cols:[{key:'name',label:'Cube name',ph:'e.g. Consolidation'},{key:'type',label:'Cube type',type:'select',options:['Consolidation','Planning','Reporting','Analytics']},{key:'desc',label:'Description',ph:'Optional'}],rows,onChange:r=>f('cubes',r),addLabel:'Add cube'})));}
+
+function StepCubeDims({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.cubeDims||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-grid-dots'}),'Cube dimension bindings'),h(TblInput,{cols:[{key:'cube',label:'Cube',ph:'e.g. Consolidation'},{key:'dim',label:'Dimension',type:'select',options:['Account','Entity','Scenario','Time','Flow','UD1','UD2','UD3','UD4','UD5','UD6','UD7','UD8','ICP']},{key:'required',label:'Required',type:'select',options:['Yes','No']},{key:'notes',label:'Notes',ph:'Optional'}],rows,onChange:r=>f('cubeDims',r),addLabel:'Add binding'})));}
+
+function StepDataSource({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.sources||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-database'}),'Data sources'),h(TblInput,{cols:[{key:'name',label:'Source name',ph:'e.g. ERP Data'},{key:'type',label:'Type',type:'select',options:['SQL Server','Oracle','CSV/Flat File','Excel','REST API','JDBC','Delimited']},{key:'connection',label:'Connection string',ph:'e.g. Server=...'},{key:'desc',label:'Description',ph:'Optional'}],rows,onChange:r=>f('sources',r),addLabel:'Add data source'})));}
+
+function StepTransform({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.transforms||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-transform'}),'Transformation rules'),h(TblInput,{cols:[{key:'source',label:'Source field',ph:'e.g. GL_ACCOUNT'},{key:'target',label:'Target dim',type:'select',options:['Account','Entity','Scenario','UD1','UD2','UD3','UD4','UD5']},{key:'method',label:'Method',type:'select',options:['Direct','Lookup','Calculated','Default','Substitution']},{key:'notes',label:'Notes',ph:'Optional'}],rows,onChange:r=>f('transforms',r),addLabel:'Add rule'})));}
+
+function StepLoadRules({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.loadRules||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-upload'}),'Data load rules'),h(TblInput,{cols:[{key:'name',label:'Rule name',ph:'e.g. Actuals Load'},{key:'source',label:'Data source',ph:'e.g. ERP Data'},{key:'cube',label:'Target cube',ph:'e.g. Consolidation'},{key:'scenario',label:'Scenario',ph:'e.g. Actual'},{key:'method',label:'Load method',type:'select',options:['Merge','Replace','Accumulate']}],rows,onChange:r=>f('loadRules',r),addLabel:'Add load rule'})));}
+
+function StepWorkflow({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.workflows||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-workflow'}),'Workflow profiles'),h(TblInput,{cols:[{key:'name',label:'Profile name',ph:'e.g. Monthly Close'},{key:'frequency',label:'Frequency',type:'select',options:['Monthly','Quarterly','Annual','Ad-hoc']},{key:'scenario',label:'Scenario',ph:'e.g. Actual'},{key:'steps',label:'Steps',ph:'e.g. Input, Review, Approve'}],rows,onChange:r=>f('workflows',r),addLabel:'Add workflow'})));}
+
+function StepCertification({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.certifications||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-certificate'}),'Certification profiles'),h(TblInput,{cols:[{key:'name',label:'Cert name',ph:'e.g. Balance Sheet Cert'},{key:'type',label:'Type',type:'select',options:['Account Reconciliation','Workflow','Data Quality','Custom']},{key:'owner',label:'Owner group',ph:'e.g. Finance Team'},{key:'freq',label:'Frequency',type:'select',options:['Monthly','Quarterly','Annual']}],rows,onChange:r=>f('certifications',r),addLabel:'Add certification'})));}
+
+function StepTemplates({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.templates||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-template'}),'Data collection templates'),h(TblInput,{cols:[{key:'name',label:'Template name',ph:'e.g. Budget Input'},{key:'scenario',label:'Scenario',ph:'e.g. Budget'},{key:'type',label:'Type',type:'select',options:['Input','Spread','Commentary','Allocation']},{key:'cube',label:'Cube',ph:'e.g. Planning'}],rows,onChange:r=>f('templates',r),addLabel:'Add template'})));}
+
+function StepUserGroups({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.groups||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-users-group'}),'User groups'),h(TblInput,{cols:[{key:'name',label:'Group name',ph:'e.g. Finance Admins'},{key:'type',label:'Type',type:'select',options:['Administrator','Power User','User','Read Only','Data Entry']},{key:'desc',label:'Description',ph:'Optional'}],rows,onChange:r=>f('groups',r),addLabel:'Add group'})));}
+
+function StepRoles({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.roles||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-shield-check'}),'Role assignments'),h(TblInput,{cols:[{key:'group',label:'User group',ph:'e.g. Finance Admins'},{key:'object',label:'Object type',type:'select',options:['Application','Cube','Workflow','Dashboard','Data','Report']},{key:'name',label:'Object name',ph:'e.g. Consolidation Cube'},{key:'permission',label:'Permission',type:'select',options:['Full','Read/Write','Read Only','None']}],rows,onChange:r=>f('roles',r),addLabel:'Add role'})));}
+
+function StepWorkflowSec({data,onChange}){const d=data||{},f=(k,v)=>onChange({...d,[k]:v});const rows=d.wfSec||[];return h('div',null,h('div',{className:'form-card'},h('div',{className:'form-card-title'},h('i',{className:'ti ti-lock'}),'Workflow security'),h(TblInput,{cols:[{key:'workflow',label:'Workflow',ph:'e.g. Monthly Close'},{key:'group',label:'User group',ph:'e.g. Finance Admins'},{key:'role',label:'Workflow role',type:'select',options:['Owner','Preparer','Reviewer','Approver','Read Only']},{key:'scope',label:'Scope',ph:'e.g. All Entities'}],rows,onChange:r=>f('wfSec',r),addLabel:'Add security rule'})));}
+
+const STEP_COMPONENTS = {
+  'app-props':StepAppProps,'time-profile':StepTimeProfile,'scenario':StepScenario,'currency':StepCurrency,
+  'entity':StepEntity,'accounts':StepAccounts,'flow-dim':StepFlowDim,'ud-dims':StepUdDims,
+  'cube-props':StepCubeProps,'cube-dims':StepCubeDims,'data-source':StepDataSource,'transform':StepTransform,
+  'load-rules':StepLoadRules,'workflow':StepWorkflow,'certification':StepCertification,'templates':StepTemplates,
+  'user-groups':StepUserGroups,'roles':StepRoles,'workflow-sec':StepWorkflowSec,
+};
+
+function generateXML(project) {
+  if (!project) return '';
+  const s = project.steps || {};
+  const app = s['app-props'] || {};
+  const time = s['time-profile'] || {};
+  const scen = s['scenario'] || {};
+  const curr = s['currency'] || {};
+  const entity = s['entity'] || {};
+  const accounts = s['accounts'] || {};
+  const cubes = s['cube-props'] || {};
+  let xml = `<?xml version="1.0" encoding="utf-8"?>\n<!-- OneStream Platform v9 Application Configuration -->\n<!-- Generated by OS Accelerator -->\n\n<OneStreamApplication>\n`;
+  xml += `  <ApplicationProperties>\n    <Name>${app.name||'Unnamed App'}</Name>\n    <ApplicationID>${app.appId||'APP001'}</ApplicationID>\n    <Description>${app.description||''}</Description>\n    <DefaultCurrency>${app.currency||'USD'}</DefaultCurrency>\n    <ConsolidationMethod>${app.consol||'Ownership'}</ConsolidationMethod>\n    <PlatformVersion>${app.version||'9.x'}</PlatformVersion>\n  </ApplicationProperties>\n\n`;
+  xml += `  <TimeProfile>\n    <StartYear>${time.startYear||'2020'}</StartYear>\n    <EndYear>${time.endYear||'2030'}</EndYear>\n    <PeriodFrequency>${time.frequency||'Monthly'}</PeriodFrequency>\n    <FiscalYearEnd>${time.fyEnd||'December'}</FiscalYearEnd>\n    <NumberOfPeriods>${time.periods||'12'}</NumberOfPeriods>\n    <PriorPeriods>${time.priorPeriods||'3'}</PriorPeriods>\n  </TimeProfile>\n\n`;
+  if ((scen.scenarios||[]).length) { xml += `  <Scenarios>\n`; (scen.scenarios||[]).forEach(sc => { xml += `    <Scenario><Name>${sc.name}</Name><Type>${sc.type}</Type><LockType>${sc.lock}</LockType></Scenario>\n`; }); xml += `  </Scenarios>\n\n`; }
+  if ((curr.currencies||[]).length) { xml += `  <Currencies>\n`; (curr.currencies||[]).forEach(c => { xml += `    <Currency><ISOCode>${c.code}</ISOCode><Name>${c.name}</Name><IsReporting>${c.default==='Yes'?'true':'false'}</IsReporting></Currency>\n`; }); xml += `  </Currencies>\n\n`; }
+  if ((entity.entities||[]).length) { xml += `  <EntityHierarchy><TopEntity>${entity.topEntity||'Total'}</TopEntity>\n`; (entity.entities||[]).forEach(e => { xml += `    <Entity><Name>${e.name}</Name><Parent>${e.parent}</Parent><Currency>${e.currency||'USD'}</Currency><Type>${e.type}</Type><ConsolMethod>${e.consol}</ConsolMethod></Entity>\n`; }); xml += `  </EntityHierarchy>\n\n`; }
+  if ((accounts.accounts||[]).length) { xml += `  <ChartOfAccounts>\n`; (accounts.accounts||[]).forEach(a => { xml += `    <Account><Code>${a.code}</Code><Name>${a.name}</Name><Type>${a.type}</Type><FlowType>${a.flow}</FlowType><ICPEnabled>${a.icp==='Yes'?'true':'false'}</ICPEnabled></Account>\n`; }); xml += `  </ChartOfAccounts>\n\n`; }
+  if ((cubes.cubes||[]).length) { xml += `  <Cubes>\n`; (cubes.cubes||[]).forEach(c => { xml += `    <Cube><Name>${c.name}</Name><Type>${c.type}</Type></Cube>\n`; }); xml += `  </Cubes>\n\n`; }
+  xml += `</OneStreamApplication>`;
+  return xml;
+}
+
+function SummaryView({project}) {
+  if (!project) return null;
+  const s = project.steps || {};
+  const app=s['app-props']||{},time=s['time-profile']||{},scen=s['scenario']||{},curr=s['currency']||{},entity=s['entity']||{},accounts=s['accounts']||{},cubes=s['cube-props']||{};
+  const Section = ({title,icon,rows}) => { const r2=rows.filter(r=>r[1]); if(!r2.length)return null; return h('div',{className:'summary-block'},h('div',{className:'summary-title'},h('i',{className:`ti ${icon}`,style:{color:'var(--accent)'}}),title),r2.map(([k,v])=>h('div',{key:k,className:'summary-row'},h('span',{className:'summary-key'},k),h('span',{className:'summary-val'},v)))); };
+  return h('div',null,
+    h(Section,{title:'Application',icon:'ti-building',rows:[['Name',app.name],['App ID',app.appId],['Currency',app.currency],['Consol method',app.consol],['Version',app.version],['Description',app.description]]}),
+    h(Section,{title:'Time profile',icon:'ti-calendar',rows:[['Period',`${time.startYear||'?'} – ${time.endYear||'?'}`],['Frequency',time.frequency],['FY end',time.fyEnd],['Periods',time.periods]]}),
+    (scen.scenarios||[]).length>0&&h('div',{className:'summary-block'},h('div',{className:'summary-title'},h('i',{className:'ti ti-layers-difference',style:{color:'var(--accent)'}}),'Scenarios'),(scen.scenarios||[]).map(sc=>h('div',{key:sc.name,className:'summary-row'},h('span',{className:'summary-key'},sc.name),h('span',{className:'summary-val'},`${sc.type} · Lock: ${sc.lock}`)))),
+    (curr.currencies||[]).length>0&&h('div',{className:'summary-block'},h('div',{className:'summary-title'},h('i',{className:'ti ti-currency-dollar',style:{color:'var(--accent)'}}),'Currencies'),(curr.currencies||[]).map(c=>h('div',{key:c.code,className:'summary-row'},h('span',{className:'summary-key'},c.code),h('span',{className:'summary-val'},`${c.name}${c.default==='Yes'?' · Reporting':''}`)  ))),
+    h('div',{style:{background:'var(--bg2)',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',padding:'1rem',fontSize:'13px',color:'var(--text3)',textAlign:'center'}},
+      `${(entity.entities||[]).length} entities · ${(accounts.accounts||[]).length} accounts · ${(cubes.cubes||[]).length} cubes configured`)
+  );
+}
+
+function downloadJSON(project) {
+  const blob = new Blob([JSON.stringify(project, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${(project.name||'onestream-project').replace(/\s+/g,'-').toLowerCase()}.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function downloadXML(project) {
+  const xml = generateXML(project);
+  const blob = new Blob([xml], {type:'application/xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${(project.name||'onestream-app').replace(/\s+/g,'-').toLowerCase()}-v9.xml`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function App() {
+  const {project, save, loaded} = useProject();
+  const [view, setView] = useState('overview');
+  const [savedMsg, setSavedMsg] = useState(false);
+  const [outputTab, setOutputTab] = useState('human');
+  const fileInputRef = useRef(null);
+
+  if (!loaded) return h('div',{style:{padding:'3rem',textAlign:'center',color:'var(--text3)'}},'Loading...');
+  if (!project) return h(SetupScreen, {onCreate: save});
+
+  const updateStep = (stepId, data) => {
+    const updated = {...project, steps:{...(project.steps||{}),[stepId]:data}, updatedAt:new Date().toISOString()};
+    save(updated); setSavedMsg(true); setTimeout(()=>setSavedMsg(false), 2000);
+  };
+  const navToNext = (currentId) => { const idx=STEP_ORDER.indexOf(currentId); if(idx<STEP_ORDER.length-1)setView(STEP_ORDER[idx+1]); };
+  const completion = getCompletion(project);
+  const doneCount = STEP_ORDER.filter(k=>getStepStatus(project,k)==='done').length;
+
+  const handleImport = (e) => {
+    const file = e.target.files[0]; if(!file)return;
+    const reader = new FileReader();
+    reader.onload = (ev) => { try { const data=JSON.parse(ev.target.result); save(data); setView('overview'); } catch(_){ alert('Invalid project file.'); } };
+    reader.readAsText(file);
+  };
+
+  const renderMain = () => {
+    if (view === 'overview') return h(OverviewPage, {project, completion, doneCount, onNavigate:setView, onDownloadJSON:()=>downloadJSON(project), onImport:()=>fileInputRef.current?.click(), onReset:()=>{if(confirm('Reset project? All data will be lost.'))save(null);}});
+    if (view === 'output') return h(OutputPage, {project, outputTab, setOutputTab, onDownloadXML:()=>downloadXML(project), onDownloadJSON:()=>downloadJSON(project)});
+    if (STEPS[view]) {
+      const StepComp = STEP_COMPONENTS[view];
+      const stepInfo = STEPS[view];
+      const phase = PHASES.find(p=>p.id===stepInfo.phase);
+      return h('div',null,
+        h('div',{className:'page-header'},h('div',{className:'breadcrumb'},`${phase?.label} → ${stepInfo.label}`),h('div',{className:'page-title'},stepInfo.label),h('div',{className:'page-subtitle'},`Configure ${stepInfo.label.toLowerCase()} for your OneStream v9 application.`)),
+        h(StepComp, {data:project.steps?.[view], onChange:(data)=>updateStep(view,data)}),
+        h('div',{className:'actions-bar'},
+          h('button',{className:'btn btn-primary',onClick:()=>navToNext(view)},h('i',{className:'ti ti-arrow-right'}),'Save & continue'),
+          h('button',{className:'btn btn-ghost',onClick:()=>setView('overview')},'Back to overview'),
+          h('span',{className:`saved-msg ${savedMsg?'show':''}`},h('i',{className:'ti ti-check'}),'Saved')
+        )
+      );
+    }
+  };
+
+  return h('div',{className:'app'},
+    h('input',{type:'file',ref:fileInputRef,accept:'.json',style:{display:'none'},onChange:handleImport}),
+    h('nav',{className:'sidebar'},
+      h('div',{className:'sidebar-header'},
+        h('div',{className:'logo'},'OS',h('span',null,' Accelerator')),
+        h('div',{className:'project-name'},project.name||'Unnamed project')
+      ),
+      h('div',{style:{padding:'0.5rem 0'}},
+        h('div',{className:`nav-item ${view==='overview'?'active':''}`,onClick:()=>setView('overview')},h('i',{className:'ti ti-layout-dashboard',style:{fontSize:'14px',color:'var(--text3)'}}),'Overview'),
+        h('div',{className:`nav-item ${view==='output'?'active':''}`,onClick:()=>setView('output')},h('i',{className:'ti ti-code',style:{fontSize:'14px',color:'var(--text3)'}}),'Export output'),
+      ),
+      h('div',{style:{borderTop:'1px solid var(--border)',paddingTop:'0.5rem'}}),
+      PHASES.map(phase=>h('div',{key:phase.id,className:'phase-group'},
+        h('div',{className:'phase-label'},phase.label),
+        phase.steps.map(stepId=>{
+          const status=getStepStatus(project,stepId);
+          const isActive=view===stepId;
+          return h('div',{key:stepId,className:`nav-item ${isActive?'active':''}`,onClick:()=>setView(stepId)},
+            h('div',{className:`nav-dot ${status==='done'?'done':''} ${isActive&&status!=='done'?'active':''}`}),
+            STEPS[stepId].label);
+        })
+      )),
+      h('div',{className:'sidebar-footer'},
+        h('div',{className:'progress-label'},h('span',null,`${doneCount} / ${STEP_ORDER.length} steps`),h('span',null,`${completion}%`)),
+        h('div',{className:'progress-bar-wrap'},h('div',{className:'progress-bar-fill',style:{width:`${completion}%`}}))
+      )
+    ),
+    h('main',{className:'main'},renderMain())
+  );
+}
+
+function OverviewPage({project, completion, doneCount, onNavigate, onDownloadJSON, onImport, onReset}) {
+  const nextStep = STEP_ORDER.find(k=>getStepStatus(project,k)==='empty');
+  return h('div',null,
+    h('div',{className:'page-header'},
+      h('div',{className:'breadcrumb'},'Project overview'),
+      h('div',{className:'page-title'},project.name||'Your OneStream App'),
+      h('div',{className:'page-subtitle'},project.client?`Client: ${project.client}`:'Track configuration progress across all phases.')
+    ),
+    h('div',{className:'overview-grid'},
+      h('div',{className:'stat-card'},h('div',{className:'stat-label'},'Completion'),h('div',{className:'stat-val'},`${completion}%`),h('div',{className:'stat-sub'},`${doneCount} of ${STEP_ORDER.length} steps done`)),
+      h('div',{className:'stat-card'},h('div',{className:'stat-label'},'Phases'),h('div',{className:'stat-val'},PHASES.length),h('div',{className:'stat-sub'},'Foundation → Security')),
+      h('div',{className:'stat-card'},h('div',{className:'stat-label'},'Last updated'),h('div',{className:'stat-val',style:{fontSize:'18px'}},project.updatedAt?new Date(project.updatedAt).toLocaleDateString():'Never'),h('div',{className:'stat-sub'},project.updatedAt?new Date(project.updatedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'—'))
+    ),
+    nextStep&&h('div',{className:'next-banner'},
+      h('div',null,h('div',{style:{fontSize:'11px',color:'var(--accent)',textTransform:'uppercase',letterSpacing:'0.5px',marginBottom:'3px'}},'Continue where you left off'),h('div',{style:{fontSize:'14px',fontWeight:'500'}},STEPS[nextStep]?.label)),
+      h('button',{className:'btn btn-primary',onClick:()=>onNavigate(nextStep)},'Continue',h('i',{className:'ti ti-arrow-right'}))
+    ),
+    h('div',{className:'phase-cards'},
+      PHASES.map(phase=>{
+        const stepsDone=phase.steps.filter(k=>getStepStatus(project,k)==='done').length;
+        const pct=Math.round((stepsDone/phase.steps.length)*100);
+        return h('div',{key:phase.id,className:'phase-card',onClick:()=>onNavigate(phase.steps[0])},
+          h('div',{className:'phase-card-header'},h('span',{className:'phase-badge',style:{background:`color-mix(in srgb, ${phase.color} 15%, transparent)`,color:phase.color}},phase.label),h('span',{style:{fontSize:'13px',color:'var(--text3)'}},`${stepsDone}/${phase.steps.length}`)),
+          h('div',{className:'phase-card-steps'},phase.steps.map(k=>STEPS[k]?.label).join(' · ')),
+          h('div',{className:'phase-progress'},h('div',{className:'phase-progress-fill',style:{width:`${pct}%`,background:phase.color}}))
+        );
+      })
+    ),
+    h('div',{style:{display:'flex',gap:'10px',marginTop:'1.5rem',paddingTop:'1.5rem',borderTop:'1px solid var(--border)'}},
+      h('button',{className:'btn btn-ghost',onClick:onDownloadJSON},h('i',{className:'ti ti-download'}),'Save project file'),
+      h('button',{className:'btn btn-ghost',onClick:onImport},h('i',{className:'ti ti-upload'}),'Load project file'),
+      h('button',{className:'btn btn-warning',onClick:onReset},h('i',{className:'ti ti-refresh'}),'New project'),
+    )
+  );
+}
+
+function OutputPage({project, outputTab, setOutputTab, onDownloadXML, onDownloadJSON}) {
+  const xml = generateXML(project);
+  return h('div',null,
+    h('div',{className:'page-header'},h('div',{className:'breadcrumb'},'Export'),h('div',{className:'page-title'},'Configuration output'),h('div',{className:'page-subtitle'},'Human-readable summary and v9-compatible XML.')),
+    h('div',{className:'tab-row'},
+      h('button',{className:`tab-btn ${outputTab==='human'?'active':''}`,onClick:()=>setOutputTab('human')},h('i',{className:'ti ti-file-text',style:{marginRight:'5px'}}),'Summary'),
+      h('button',{className:`tab-btn ${outputTab==='xml'?'active':''}`,onClick:()=>setOutputTab('xml')},h('i',{className:'ti ti-code',style:{marginRight:'5px'}}),'XML')
+    ),
+    outputTab==='human'&&h(SummaryView,{project}),
+    outputTab==='xml'&&h('div',{className:'xml-wrap'},h('div',{className:'xml-box'},xml),h('button',{className:'copy-btn',onClick:()=>navigator.clipboard?.writeText(xml).catch(()=>{})},h('i',{className:'ti ti-copy'}),'Copy')),
+    h('div',{style:{display:'flex',gap:'10px',marginTop:'1.5rem',paddingTop:'1.5rem',borderTop:'1px solid var(--border)'}},
+      h('button',{className:'btn btn-primary',onClick:onDownloadXML},h('i',{className:'ti ti-download'}),'Download XML'),
+      h('button',{className:'btn btn-ghost',onClick:onDownloadJSON},h('i',{className:'ti ti-download'}),'Download project JSON'),
+    )
+  );
+}
+
+function SetupScreen({onCreate}) {
+  const [name,setName]=useState('');
+  const [client,setClient]=useState('');
+  const [desc,setDesc]=useState('');
+  const create=()=>{if(!name.trim())return;onCreate({name:name.trim(),client:client.trim(),desc:desc.trim(),steps:{},createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()});};
+  return h('div',{style:{background:'var(--bg)',minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',padding:'2rem'}},
+    h('div',{className:'setup-wrap'},
+      h('div',{className:'setup-logo'},'OS',h('span',null,' Accelerator')),
+      h('p',{className:'setup-sub'},'The OneStream v9 configuration accelerator. Build a complete, exportable app blueprint — step by step.'),
+      h('div',{className:'setup-card'},
+        h('div',{className:'form-card-title',style:{marginBottom:'1.25rem'}},h('i',{className:'ti ti-plus'}),'Create a new project'),
+        h('div',{className:'form-group',style:{marginBottom:'1rem'}},h('label',null,'Project name'),h('input',{type:'text',value:name,placeholder:'e.g. Acme Corp FP&A Platform',onChange:e=>setName(e.target.value),onKeyDown:e=>e.key==='Enter'&&create()})),
+        h('div',{className:'form-group',style:{marginBottom:'1rem'}},h('label',null,'Client / company'),h('input',{type:'text',value:client,placeholder:'e.g. Acme Corporation',onChange:e=>setClient(e.target.value)})),
+        h('div',{className:'form-group',style:{marginBottom:'1.5rem'}},h('label',null,'Brief description'),h('textarea',{value:desc,placeholder:'What is this application for?',onChange:e=>setDesc(e.target.value),style:{minHeight:'60px'}})),
+        h('button',{className:'btn btn-primary',style:{width:'100%',justifyContent:'center'},onClick:create,disabled:!name.trim()},'Start configuring',h('i',{className:'ti ti-arrow-right'}))
+      )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+</script>
+</body>
+</html>
