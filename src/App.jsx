@@ -16,7 +16,7 @@ export default function App() {
   const [savedMsg, setSavedMsg]   = useState(false);
   const [outputTab, setOutputTab] = useState('human');
   const [stepErrors, setStepErrors] = useState([]);
-  const fileInputRef              = useRef(null);
+  const fileInputRef = useRef(null);
 
   if (!loaded) {
     return <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text3)' }}>Loading...</div>;
@@ -25,58 +25,78 @@ export default function App() {
     return <SetupScreen onCreate={save} />;
   }
 
-  const updateStep = (stepId, data) => {
+  // Mark a step as visited — persisted so the export gate knows the user reviewed it
+  function markTouched(stepId) {
+    if (!STEPS[stepId]) return;
+    const touched = project.touchedSteps || [];
+    if (touched.includes(stepId)) return;
+    save({ ...project, touchedSteps: [...touched, stepId] });
+  }
+
+  function navigateTo(dest) {
+    setStepErrors([]);
+    setView(dest);
+    if (STEPS[dest]) markTouched(dest);
+  }
+
+  function updateStep(stepId, data) {
+    const touched = [...new Set([...(project.touchedSteps || []), stepId])];
     const updated = {
       ...project,
       steps: { ...(project.steps || {}), [stepId]: data },
+      touchedSteps: touched,
       updatedAt: new Date().toISOString(),
     };
     save(updated);
     setStepErrors([]);
     setSavedMsg(true);
     setTimeout(() => setSavedMsg(false), 2000);
-  };
+  }
 
-  const navToNext = (currentId) => {
+  function navToNext(currentId) {
     const errors = validateStep(currentId, project.steps?.[currentId]);
     if (errors.length > 0) {
       setStepErrors(errors);
       return;
     }
     setStepErrors([]);
-    const idx = STEP_ORDER.indexOf(currentId);
-    if (idx < STEP_ORDER.length - 1) setView(STEP_ORDER[idx + 1]);
-    else setView('overview');
-  };
+    const idx  = STEP_ORDER.indexOf(currentId);
+    const next = STEP_ORDER[idx + 1];
+    if (next) {
+      setView(next);
+      markTouched(next);
+    } else {
+      setView('overview');
+    }
+  }
 
-  const handleImport = (e) => {
+  function handleImport(e) {
     const file = e.target.files[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
       try {
-        const data = JSON.parse(ev.target.result);
-        save(data);
+        save(JSON.parse(ev.target.result));
         setView('overview');
       } catch (_) {
-        alert('Invalid project file. Please select a valid OneStream Accelerator .json file.');
+        alert('Invalid project file.');
       }
     };
     reader.readAsText(file);
     e.target.value = '';
-  };
+  }
 
   const completion = getCompletion(project);
-  const doneCount  = STEP_ORDER.filter((k) => getEnhancedStepStatus(project, k) === 'done').length;
+  const doneCount  = STEP_ORDER.filter(k => getEnhancedStepStatus(project, k) === 'done').length;
 
-  const renderMain = () => {
+  function renderMain() {
     if (view === 'overview') {
       return (
         <OverviewPage
           project={project}
           completion={completion}
           doneCount={doneCount}
-          onNavigate={setView}
+          onNavigate={navigateTo}
           onDownloadJSON={() => downloadJSON(project)}
           onImport={() => fileInputRef.current?.click()}
           onReset={() => {
@@ -97,6 +117,7 @@ export default function App() {
           setOutputTab={setOutputTab}
           onDownloadXML={() => downloadXML(project)}
           onDownloadJSON={() => downloadJSON(project)}
+          onNavigate={navigateTo}
         />
       );
     }
@@ -104,7 +125,7 @@ export default function App() {
     if (STEPS[view]) {
       const StepComp = STEP_COMPONENTS[view];
       const stepInfo = STEPS[view];
-      const phase    = PHASES.find((p) => p.id === stepInfo.phase);
+      const phase    = PHASES.find(p => p.id === stepInfo.phase);
 
       return (
         <div>
@@ -121,7 +142,7 @@ export default function App() {
               {stepInfo.required && (
                 <span style={{ fontSize: '11px', color: 'var(--danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <i className="ti ti-asterisk" style={{ fontSize: '10px' }} />
-                  Required for completion
+                  Required for export
                 </span>
               )}
             </div>
@@ -130,7 +151,7 @@ export default function App() {
 
           <StepComp
             data={project.steps?.[view]}
-            onChange={(data) => updateStep(view, data)}
+            onChange={data => updateStep(view, data)}
           />
 
           {stepErrors.length > 0 && (
@@ -139,9 +160,7 @@ export default function App() {
                 <i className="ti ti-alert-circle" />
                 Please fix the following before continuing:
               </div>
-              <ul>
-                {stepErrors.map((err, i) => <li key={i}>{err}</li>)}
-              </ul>
+              <ul>{stepErrors.map((err, i) => <li key={i}>{err}</li>)}</ul>
             </div>
           )}
 
@@ -163,7 +182,7 @@ export default function App() {
     }
 
     return null;
-  };
+  }
 
   return (
     <div className="app">
@@ -171,7 +190,7 @@ export default function App() {
       <Sidebar
         project={project}
         view={view}
-        onNavigate={(v) => { setStepErrors([]); setView(v); }}
+        onNavigate={navigateTo}
         doneCount={doneCount}
         completion={completion}
       />
