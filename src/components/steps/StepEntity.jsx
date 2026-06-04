@@ -92,7 +92,7 @@ export default function StepEntity({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-list" />Entity Members</div>
         <ColumnGuide columns={ENTITY_GUIDE} />
-        <TblInput cols={ENTITY_COLS} rows={d.entities || []} onChange={(r) => f('entities', r)} addLabel="Add entity" />
+        <TblInput cols={ENTITY_COLS} rows={d.entities || []} onChange={(r) => f('entities', r)} addLabel="Add entity" csvFilename="entities" />
       </div>
 
       <InfoBox type="critical" title="Elimination Entities — Non-Negotiable for Accurate Consolidation">

@@ -56,7 +56,7 @@ export default function StepLoadRules({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-upload" />Data Load Rules</div>
         <ColumnGuide columns={LR_GUIDE} />
-        <TblInput cols={COLS} rows={d.loadRules || []} onChange={(r) => f('loadRules', r)} addLabel="Add load rule" />
+        <TblInput cols={COLS} rows={d.loadRules || []} onChange={(r) => f('loadRules', r)} addLabel="Add load rule" csvFilename="load-rules" />
       </div>
 
       <InfoBox type="warning" title="Accumulate Method — The #1 Cause of Production Data Corruption">

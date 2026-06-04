@@ -64,7 +64,7 @@ export default function StepUserGroups({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-users-group" />User Groups</div>
         <ColumnGuide columns={UG_GUIDE} />
-        <TblInput cols={COLS} rows={d.groups || DEFAULT_ROWS} onChange={(r) => f('groups', r)} addLabel="Add user group" />
+        <TblInput cols={COLS} rows={d.groups || DEFAULT_ROWS} onChange={(r) => f('groups', r)} addLabel="Add user group" csvFilename="user-groups" />
       </div>
 
       <InfoBox type="critical" title="System Administrator — The Most Dangerous Role in OneStream">

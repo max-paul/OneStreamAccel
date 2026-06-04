@@ -57,7 +57,7 @@ export default function StepCubeDims({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-grid-dots" />Cube Dimension Bindings</div>
         <ColumnGuide columns={DIM_GUIDE} />
-        <TblInput cols={COLS} rows={d.cubeDims || []} onChange={(r) => f('cubeDims', r)} addLabel="Add binding" />
+        <TblInput cols={COLS} rows={d.cubeDims || []} onChange={(r) => f('cubeDims', r)} addLabel="Add binding" csvFilename="cube-dimensions" />
       </div>
 
       <InfoBox type="tip" title="Standard Binding Sets for Common Cube Types">

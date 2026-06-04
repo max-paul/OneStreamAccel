@@ -56,7 +56,7 @@ export default function StepUdDims({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-tag" />User-Defined Dimension Configuration</div>
         <ColumnGuide columns={UD_GUIDE} />
-        <TblInput cols={COLS} rows={d.udDims || []} onChange={(r) => f('udDims', r)} addLabel="Add UD dimension" />
+        <TblInput cols={COLS} rows={d.udDims || []} onChange={(r) => f('udDims', r)} addLabel="Add UD dimension" csvFilename="ud-dimensions" />
       </div>
 
       <InfoBox type="tip" title="Standard UD Assignment — Proven Across Hundreds of Implementations">

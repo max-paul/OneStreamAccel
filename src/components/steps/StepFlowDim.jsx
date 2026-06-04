@@ -67,7 +67,7 @@ export default function StepFlowDim({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-arrows-exchange" />Flow Members</div>
         <ColumnGuide columns={FLOW_GUIDE} />
-        <TblInput cols={COLS} rows={d.flows || DEFAULT_ROWS} onChange={(r) => f('flows', r)} addLabel="Add flow member" />
+        <TblInput cols={COLS} rows={d.flows || DEFAULT_ROWS} onChange={(r) => f('flows', r)} addLabel="Add flow member" csvFilename="flow-dimension" />
       </div>
 
       <InfoBox type="tip" title="Tier Your Flow Structure to Scope">

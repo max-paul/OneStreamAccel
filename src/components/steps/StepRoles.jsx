@@ -57,7 +57,7 @@ export default function StepRoles({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-shield-check" />Role Assignments</div>
         <ColumnGuide columns={ROLES_GUIDE} />
-        <TblInput cols={COLS} rows={d.roles || []} onChange={(r) => f('roles', r)} addLabel="Add role" />
+        <TblInput cols={COLS} rows={d.roles || []} onChange={(r) => f('roles', r)} addLabel="Add role" csvFilename="role-assignments" />
       </div>
 
       <InfoBox type="tip" title="Recommended Permission Matrix — Standard 5-Group Model">

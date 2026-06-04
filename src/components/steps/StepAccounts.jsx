@@ -94,7 +94,7 @@ export default function StepAccounts({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-list-details" />Account Members</div>
         <ColumnGuide columns={ACCT_GUIDE} />
-        <TblInput cols={ACCOUNT_COLS} rows={d.accounts || []} onChange={(r) => f('accounts', r)} addLabel="Add account" />
+        <TblInput cols={ACCOUNT_COLS} rows={d.accounts || []} onChange={(r) => f('accounts', r)} addLabel="Add account" csvFilename="accounts" />
       </div>
 
       <InfoBox type="tip" title="Recommended Account Naming Convention">

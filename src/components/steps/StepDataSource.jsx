@@ -62,7 +62,7 @@ export default function StepDataSource({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-database" />Data Sources</div>
         <ColumnGuide columns={DS_GUIDE} />
-        <TblInput cols={COLS} rows={d.sources || []} onChange={(r) => f('sources', r)} addLabel="Add data source" />
+        <TblInput cols={COLS} rows={d.sources || []} onChange={(r) => f('sources', r)} addLabel="Add data source" csvFilename="data-sources" />
       </div>
 
       <InfoBox type="critical" title="Production Security — Use XFCredential Vault, Not Embedded Passwords">

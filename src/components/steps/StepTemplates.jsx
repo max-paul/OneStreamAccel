@@ -62,7 +62,7 @@ export default function StepTemplates({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-template" />Data Collection Templates</div>
         <ColumnGuide columns={TMPL_GUIDE} />
-        <TblInput cols={COLS} rows={d.templates || []} onChange={(r) => f('templates', r)} addLabel="Add template" />
+        <TblInput cols={COLS} rows={d.templates || []} onChange={(r) => f('templates', r)} addLabel="Add template" csvFilename="data-templates" />
       </div>
 
       <InfoBox type="tip" title="Template Design Principles — Learned from 200+ Planning Implementations">

@@ -1,63 +1,144 @@
 # OneStream Accelerator
 
-A production-grade configuration design tool for OneStream Platform v9 implementations. This application guides implementation consultants and finance teams through every phase of a OneStream deployment — from application identity through security model — capturing all configuration decisions in a structured, exportable format.
+> **Free, open-source configuration design and export tool for OneStream Platform v9 implementations.**
+> Built by OneStream consultants, for OneStream consultants.
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-blue?style=for-the-badge&logo=github)](https://max-paul.github.io/OneStreamAccel/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 ---
 
-## Overview
+## 🚀 Try It Now — No Install Required
 
-OneStream Accelerator eliminates the "blank whiteboard" problem at the start of every implementation engagement. Instead of starting from scratch with a spreadsheet or Word document, consultants use this tool to capture, validate, and export a complete application blueprint that can be handed directly to the configuration team.
+**[https://max-paul.github.io/OneStreamAccel/](https://max-paul.github.io/OneStreamAccel/)**
 
-**What it produces:**
-- A complete configuration blueprint (saved locally in your browser)
-- A human-readable summary of all design decisions
-- A v9-compatible XML export covering all 19 configuration areas
-- A reusable project file (.json) that can be shared between team members
+Works in any modern browser. No login. No data leaves your machine. Free forever.
 
 ---
 
-## Quick Start
+## What Is OneStream Accelerator?
+
+**OneStream Accelerator** is a structured configuration wizard for **OneStream Platform v9** implementations. It guides consultants and finance teams through all 19 configuration areas — from Application Properties to Security — capturing every design decision with built-in expert guidance, validating required fields, and exporting files that can be imported directly into a live OneStream environment.
+
+If you've ever started a new OneStream engagement and spent the first week building a configuration tracker spreadsheet from scratch, this tool eliminates that entirely.
+
+### Who Is This For?
+
+- **OneStream implementation consultants** — capture client design decisions in a structured, exportable format from day one
+- **Finance systems teams** — document your OneStream application configuration for audit, maintenance, and onboarding
+- **OneStream administrators** — design and validate configuration changes before applying them to production
+- **Students and learners** — understand how a OneStream application is structured with step-by-step guidance on every decision
+
+---
+
+## Key Features
+
+### ✅ Expert Guidance at Every Step
+Every configuration screen includes authoritative implementation guidance drawn from real-world enterprise OneStream deployments — including common mistakes, best practice recommendations, and critical warnings on permanent decisions (like the Time Profile, which cannot be changed after go-live).
+
+### ✅ Column-Level Documentation
+Every table input has an expandable **Column Guide** — a field-by-field reference explaining what each column means, why it matters in OneStream, and a full glossary of every dropdown option with its real-world implications.
+
+### ✅ Export Gate with Default Value Detection
+The tool tracks which steps you've visited and detects when values haven't changed from pre-populated defaults. Before allowing export, it requires you to either configure each required step or explicitly confirm that the default values are correct for your implementation.
+
+### ✅ 7 Directly Importable OneStream XML Files
+The **OneStream Import Files** tab generates 7 files in the exact `OneStreamXF v9.3` format — these are not documentation, they are directly importable into a OneStream environment via the standard import wizard.
+
+### ✅ Complete Design Specification XML
+A full human-readable XML blueprint covering all 19 configuration areas — suitable as a master reference document for the implementation team.
+
+### ✅ Sharable Project Files
+Save your project as `.json` and share with teammates. Anyone can load it on any machine to continue working. No account required.
+
+---
+
+## The 19 Configuration Steps
+
+### Phase 1 — Foundation
+| Step | What You Configure |
+|---|---|
+| Application Properties | App name, Application ID, consolidation method, platform version, industry, go-live target |
+| Time Profile | Fiscal year range, period frequency, fiscal year end, calendar type, Period 0 |
+| Scenario Setup | Scenario members (Actual/Budget/Forecast), lock types, ICP enablement, default views |
+| Currency Setup | All entity currencies, reporting currency, FX translation method, rate types |
+
+### Phase 2 — Dimensions
+| Step | What You Configure |
+|---|---|
+| Entity Hierarchy | Full legal/management entity tree, elimination entities, ICP entities, ownership %, consol methods |
+| Account Structure | Chart of accounts with types, flow types, sign convention, ICP flags, input flags |
+| Flow Dimension | Opening/movement/closing members, translation methods per flow member |
+| UD1–UD8 Dimensions | User-defined analytical dimensions (Cost Center, Product, Project, etc.) |
+
+### Phase 3 — Cube Design
+| Step | What You Configure |
+|---|---|
+| Cube Properties | Cube IDs, types, ICP enablement |
+| Cube Dimensions | Dimension bindings per cube, required vs. optional, default members |
+
+### Phase 4 — Data & Integration
+| Step | What You Configure |
+|---|---|
+| Data Sources | Connector types, authentication methods, connection references |
+| Transformation Rules | Source-to-OneStream dimension mappings with catch-all rules auto-generated |
+| Data Load Rules | Load method (Merge/Replace/Accumulate), target cube/scenario, clear strategy |
+
+### Phase 5 — Workflow & Process
+| Step | What You Configure |
+|---|---|
+| Workflow Profiles | Close management profiles, frequencies, granularity levels |
+| Certification Setup | Balance sheet reconciliation profiles with SOX-quality question text |
+| Data Collection Templates | Budget/forecast input templates, input levels, seeding strategy |
+
+### Phase 6 — Security
+| Step | What You Configure |
+|---|---|
+| User Groups | Standard 5-group model (System Admin, Configurator, Process Owner, Standard User, Read Only) |
+| Role Assignments | Application, cube, workflow, dashboard, and member-level permissions |
+| Workflow Security | Preparer/Reviewer/Approver role assignments with SoD documentation |
+
+---
+
+## OneStream Import Files
+
+Seven files generated in the exact `OneStreamXF version="9.3.0.18429"` format:
+
+| File | Import Location in OneStream |
+|---|---|
+| `ApplicationProperties.xml` | Administration → Application → Properties |
+| `ApplicationSecurityRoles.xml` | Administration → Application → Security |
+| `DataSources.xml` | Application → Data Integration → Data Sources |
+| `TransformationRules.xml` | Application → Data Integration → Transformation Rules |
+| `DataManagement.xml` | Application → Data Integration → Data Management |
+| `WorkflowProfiles.xml` | Application → Workflow → Profiles |
+| `CertificationQuestions.xml` | Application → Close Management → Certification |
+
+> Dimension member data (Accounts, Entities, Flow, UDs) is loaded separately via **Dimension Management → Load Members** — CSV/Excel imports native to OneStream.
+
+---
+
+## Getting Started (Local Development)
 
 ### Prerequisites
-
-- [Node.js 18+](https://nodejs.org/) (LTS recommended)
-- npm 9+ (included with Node.js)
-
-### Installation
+- [Node.js 18+](https://nodejs.org/)
+- npm 9+
 
 ```bash
-git clone https://github.com/your-org/onestream-accelerator.git
-cd onestream-accelerator
+git clone https://github.com/max-paul/OneStreamAccel.git
+cd OneStreamAccel
 npm install
 npm run dev
 ```
 
-Open `http://localhost:5173` in your browser.
-
-### Build for Production
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ```bash
-npm run build
-npm run preview   # Preview the production build locally
+npm run build      # Production build → dist/
+npm run preview    # Preview production build locally
 ```
-
-The production build outputs to `dist/`. Deploy to any static hosting service (Azure Static Web Apps, AWS S3 + CloudFront, Netlify, etc.).
-
----
-
-## Technology Stack
-
-| Layer | Technology |
-|---|---|
-| Framework | React 18 |
-| Build Tool | Vite 6 |
-| Styling | Pure CSS (custom design system, no frameworks) |
-| Icons | Tabler Icons (CDN) |
-| Fonts | Inter, Syne, DM Mono (Google Fonts) |
-| Persistence | Browser localStorage |
-| Output | JSON, XML |
-
-No backend required. All data is stored in the user's browser. The application runs entirely client-side.
 
 ---
 
@@ -65,323 +146,155 @@ No backend required. All data is stored in the user's browser. The application r
 
 ```
 src/
-├── main.jsx                    Entry point
-├── App.jsx                     Root component — routing, state, validation
-├── index.css                   Global design system styles
-│
-├── data/
-│   └── constants.js            PHASES, STEPS, STEP_ORDER definitions
-│
-├── hooks/
-│   └── useProject.js           localStorage persistence hook
-│
+├── main.jsx                     Entry point + ErrorBoundary
+├── App.jsx                      Root — routing, navigation, touch tracking
+├── index.css                    Design system (CSS custom properties)
+├── data/constants.js            Phase and step definitions
+├── hooks/useProject.js          localStorage persistence
 ├── utils/
-│   ├── completion.js           Progress calculation
-│   ├── validation.js           Required field validation per step
-│   ├── xml.js                  Complete XML generation (all 19 steps)
-│   └── download.js             JSON and XML file download utilities
-│
+│   ├── completion.js            Progress calculation
+│   ├── validation.js            Required field validation
+│   ├── stepDefaults.js          Default value detection (for export gate)
+│   ├── exportReadiness.js       Per-step export readiness logic
+│   ├── xml.js                   Design-spec XML (all 19 steps)
+│   ├── download.js              Download utilities
+│   └── generators/              OneStreamXF-format XML generators
+│       ├── appProperties.js     → ApplicationProperties.xml
+│       ├── securityRoles.js     → ApplicationSecurityRoles.xml
+│       ├── dataSources.js       → DataSources.xml
+│       ├── transformRules.js    → TransformationRules.xml
+│       ├── dataManagement.js    → DataManagement.xml
+│       ├── workflowProfiles.js  → WorkflowProfiles.xml
+│       └── certQuestions.js     → CertificationQuestions.xml
 └── components/
-    ├── InfoBox.jsx             Contextual guidance component (info/tip/warning/critical)
-    ├── TblInput.jsx            Dynamic table input component
-    ├── Sidebar.jsx             Navigation with step completion indicators
-    ├── OverviewPage.jsx        Project dashboard
-    ├── OutputPage.jsx          Export / output view
-    ├── SetupScreen.jsx         New project creation
-    ├── SummaryView.jsx         Human-readable configuration summary
-    └── steps/
-        ├── index.js            Step component registry
-        ├── StepAppProps.jsx    Application Properties
-        ├── StepTimeProfile.jsx Time Profile
-        ├── StepScenario.jsx    Scenario Setup
-        ├── StepCurrency.jsx    Currency Setup
-        ├── StepEntity.jsx      Entity Hierarchy
-        ├── StepAccounts.jsx    Chart of Accounts
-        ├── StepFlowDim.jsx     Flow Dimension
-        ├── StepUdDims.jsx      UD1–UD8 Dimensions
-        ├── StepCubeProps.jsx   Cube Properties
-        ├── StepCubeDims.jsx    Cube Dimension Bindings
-        ├── StepDataSource.jsx  Data Source Setup
-        ├── StepTransform.jsx   Transformation Rules
-        ├── StepLoadRules.jsx   Data Load Rules
-        ├── StepWorkflow.jsx    Workflow Profiles
-        ├── StepCertification.jsx  Certification Setup
-        ├── StepTemplates.jsx   Data Collection Templates
-        ├── StepUserGroups.jsx  User Groups
-        ├── StepRoles.jsx       Role Assignments
-        └── StepWorkflowSec.jsx Workflow Security
+    ├── InfoBox.jsx              Guidance callout component
+    ├── ColumnGuide.jsx          Collapsible column-by-column reference
+    ├── ExportReadiness.jsx      Export gate with per-step status
+    ├── TblInput.jsx             Dynamic table input
+    └── steps/                   19 step components
 ```
 
 ---
 
-## Implementation Methodology
+## Tech Stack
 
-This tool follows a proven 6-phase OneStream implementation methodology. Complete phases in order — later phases depend on earlier configuration decisions.
-
-### Phase 1 — Foundation
-
-Establishes the non-negotiable structural parameters of the application.
-
-| Step | Key Decisions | Common Mistakes |
-|---|---|---|
-| **Application Properties** | App ID (permanent), consolidation method, platform version | App ID with spaces or special characters; choosing wrong consolidation method |
-| **Time Profile** | Fiscal year end, year range, period count | Start year too recent (no historical data); end year too close (runs out of years); 12 periods instead of 13 (no Period 0) |
-| **Scenario Setup** | Actual, Budget, Forecast members; lock types | Actual scenario with No lock; missing scenario IDs; too many scenarios in Phase 1 |
-| **Currency Setup** | All entity currencies; reporting currency; CTA method | Forgetting the CTA equity account; not adding all entity currencies |
-
-> **Critical:** The Time Profile is permanent. Once data is loaded, changing the fiscal year end, period count, or year range requires a full application rebuild. Confirm these values with the client's Finance Director before proceeding.
-
-### Phase 2 — Dimensions
-
-Builds the analytical framework for the Financial Intelligence Cube (FIC).
-
-| Step | Key Decisions | Common Mistakes |
-|---|---|---|
-| **Entity Hierarchy** | Legal entity tree; elimination entities; ICP entities; ownership % | Missing elimination entities; ICP entities not matching base entities |
-| **Account Structure** | COA member names; account types; flow types; sign convention | Mixing flow types (Balance vs. Flow); missing system accounts (TOTAL_ASSETS, NET_INCOME, EQ_CTA) |
-| **Flow Dimension** | Opening/Movements/Closing structure; translation methods | Applying flow to P&L accounts; insufficient flow members for BS analysis |
-| **UD Dimensions** | UD1–UD3 active dimensions; UD4–UD8 reserved | Enabling too many UDs; no "Total" default member; enabling UD dimensions without business requirement |
-
-> **Critical:** The Account dimension naming convention is permanent. Member names used in business rules, reports, and data loads cannot be changed without updating every reference. Use a consistent, meaningful prefix system from day one.
-
-### Phase 3 — Cube Design
-
-Configures the data storage containers and their dimensional structure.
-
-| Step | Key Decisions | Common Mistakes |
-|---|---|---|
-| **Cube Properties** | Number of cubes; cube types; ICP enablement | Creating too many cubes; enabling ICP on planning cubes |
-| **Cube Dimensions** | Required vs. optional dimensions; default members | Setting all dimensions as required (makes data entry complex); no default members for optional UDs |
-
-### Phase 4 — Data & Integration
-
-Defines how external data enters the platform.
-
-| Step | Key Decisions | Common Mistakes |
-|---|---|---|
-| **Data Sources** | Connection types; naming convention; authentication method | Hardcoding passwords in connection strings (use XFCredential Vault) |
-| **Transformation Rules** | Mapping method; source-to-target field mapping | No catch-all/unmapped rule (causes silent data load failures) |
-| **Load Rules** | Load method (Merge/Replace); target cube and scenario | Using Accumulate incorrectly; no period clearing strategy |
-
-### Phase 5 — Workflow & Process
-
-Configures the period-end close management and planning input process.
-
-| Step | Key Decisions | Common Mistakes |
-|---|---|---|
-| **Workflow Profiles** | Close steps; frequency; granularity | Over-engineered workflows with too many steps; too-granular workflow units |
-| **Certification Setup** | Account reconciliation scope; due dates; owner groups | Certification due dates not aligned with close calendar |
-| **Templates** | Budget/forecast input forms; input level; template type | Templates that are too complex or too wide; missing seeding from Actuals |
-
-### Phase 6 — Security
-
-Establishes the access control model before go-live.
-
-| Step | Key Decisions | Common Mistakes |
-|---|---|---|
-| **User Groups** | Group structure; admin access levels | Too many System Admins; end users with configurator rights |
-| **Role Assignments** | Permission matrix by group and object | Over-permissive default access; no member-level security for entity isolation |
-| **Workflow Security** | Preparer/Reviewer/Approver assignments; scope | Same person can both prepare and approve (SoD violation) |
-
----
-
-## Validation Rules
-
-The application enforces the following required fields before allowing advancement to the next step:
-
-| Step | Required Fields |
+| | |
 |---|---|
-| Application Properties | Application Name, Application ID |
-| Time Profile | Start Year, End Year, Period Frequency, Fiscal Year End, Number of Periods |
-| Scenario Setup | At least one scenario row |
-| Currency Setup | At least one currency row |
-| Entity Hierarchy | Top-level entity name + at least one entity row |
-| Account Structure | At least one account row |
-| Cube Properties | At least one cube row |
-| User Groups | At least one user group row |
-
-Additional validation rules:
-- Application ID: only letters, numbers, and underscores
-- End Year must be greater than Start Year
-- Start Year must be 2000 or later; End Year must not exceed 2060
-
----
-
-## Data Persistence & Project Files
-
-### How Data is Stored
-
-All data is saved automatically to **browser localStorage** on every change. There is no server, no login, and no cloud sync. Data persists across browser sessions on the same device and browser.
-
-**Storage key:** `os_accelerator_v1`
-
-### Exporting Projects
-
-**Save project file (.json):** Downloads a complete JSON snapshot of your project. Share this file with other team members — they can load it using "Load project file."
-
-**Download XML:** Exports a v9-compatible XML configuration file covering all 19 configuration areas. This file can be used as the master configuration reference document for the implementation team.
-
-### Import / Collaboration
-
-Load a previously saved `.json` project file using the "Load project file" button on the Overview page. The application replaces the current project with the imported one.
-
-> **Note:** Multiple users working on the same project should designate one person to maintain the master project file, or use version control (Git) on the exported JSON file.
-
----
-
-## XML Export Format
-
-The exported XML follows this top-level structure:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<OneStreamApplication>
-  <ApplicationProperties />  <!-- Phase 1 -->
-  <TimeProfile />
-  <Scenarios />
-  <Currencies />
-  <EntityHierarchy />        <!-- Phase 2 -->
-  <ChartOfAccounts />
-  <FlowDimension />
-  <UserDefinedDimensions />
-  <Cubes />                  <!-- Phase 3 -->
-  <CubeDimensionBindings />
-  <DataSources />            <!-- Phase 4 -->
-  <TransformationRules />
-  <DataLoadRules />
-  <WorkflowProfiles />       <!-- Phase 5 -->
-  <Certifications />
-  <DataCollectionTemplates />
-  <UserGroups />             <!-- Phase 6 -->
-  <RoleAssignments />
-  <WorkflowSecurity />
-</OneStreamApplication>
-```
-
-Sections are only included in the output if data has been entered for that step. Special characters in field values are XML-escaped automatically.
-
----
-
-## OneStream Key Concepts Reference
-
-### Financial Intelligence Cube (FIC)
-
-OneStream's core data store. Every cube is a multi-dimensional intersection of:
-- **Account** — Chart of Accounts (mandatory)
-- **Entity** — Organizational hierarchy (mandatory)
-- **Scenario** — Data isolation (mandatory)
-- **Time** — Fiscal calendar (mandatory)
-- **Consolidation Method** — Consol calculation layer (required for consolidation cubes)
-- **Flow** — Balance sheet movement tracking (optional but recommended)
-- **ICP** — Intercompany partner (optional, enables IC elimination)
-- **UD1–UD8** — User-defined analytical dimensions (optional)
-
-### Consolidation Methods
-
-| Method | Description | Use Case |
-|---|---|---|
-| Ownership | Full consolidation at ownership % | Subsidiaries >50% owned |
-| Equity | Net equity share only | Associates 20–50% owned |
-| Proportional | Assets/liabilities at ownership % | Joint ventures |
-| None | No consolidation | Dormant/informational entities |
-
-### Account Types
-
-| Type | Flow Type | Examples |
-|---|---|---|
-| Revenue | Flow (P&L) | Product Sales, Service Revenue |
-| Expense | Flow (P&L) | Personnel, D&A, Marketing |
-| Asset | Balance / EndBalance | Cash, Receivables, Fixed Assets |
-| Liability | Balance / EndBalance | Payables, Debt, Provisions |
-| Equity | Balance / EndBalance | Share Capital, Retained Earnings, CTA |
-| Statistical | Flow | Headcount FTEs, Units Sold |
-
-### Required System Accounts
-
-Every OneStream application requires these accounts for consolidation to work correctly:
-- `TOTAL_ASSETS` — top parent of all asset accounts
-- `TOTAL_LIABILITIES` — top parent of all liability accounts
-- `TOTAL_EQUITY` — includes Retained Earnings and CTA
-- `NET_INCOME` — links P&L to Balance Sheet (Total Revenue − Total Expenses)
-- `RETAINED_EARNINGS` — accumulates prior-year net income
-- `EQ_CTA` — Cumulative Translation Adjustment (required for multi-currency)
-
----
-
-## Development
-
-### Adding a New Step
-
-1. Add the step definition to `src/data/constants.js` in the appropriate PHASES array
-2. Create `src/components/steps/StepYourName.jsx` following the existing pattern
-3. Register the component in `src/components/steps/index.js`
-4. Add any required field validation to `src/utils/validation.js`
-5. Add XML generation for the new step in `src/utils/xml.js`
-
-### Design System
-
-CSS custom properties are defined in `src/index.css`:
-
-```css
---bg, --bg2, --bg3          Background layers
---border, --border2          Border colors
---accent, --accent2          Primary brand blue
---text, --text2, --text3     Text hierarchy
---success, --warning, --danger  Status colors
---phase1 through --phase6   Phase-specific colors
---radius, --radius-lg        Border radius tokens
-```
-
-### InfoBox Component
-
-Use the `InfoBox` component to add contextual guidance to any step:
-
-```jsx
-import InfoBox from '../InfoBox';
-
-// Types: 'info' (blue), 'tip' (green), 'warning' (amber), 'critical' (red)
-<InfoBox type="warning" title="Important">
-  Your guidance text here. Supports <strong>HTML</strong> inline.
-</InfoBox>
-```
+| **Framework** | React 18 |
+| **Build** | Vite 6 |
+| **Styling** | Pure CSS — no UI framework |
+| **Icons** | Tabler Icons |
+| **Fonts** | Inter · Syne · DM Mono |
+| **Persistence** | Browser localStorage |
+| **Hosting** | GitHub Pages |
 
 ---
 
 ## Deployment
 
-### Azure Static Web Apps
+The app deploys automatically to GitHub Pages on every push to `main`.
 
-```yaml
-# .github/workflows/azure-static-web-apps.yml
-- name: Build and Deploy
-  uses: Azure/static-web-apps-deploy@v1
-  with:
-    app_location: "/"
-    api_location: ""
-    output_location: "dist"
-```
+**Live:** [https://max-paul.github.io/OneStreamAccel/](https://max-paul.github.io/OneStreamAccel/)
 
-### Nginx (Self-Hosted)
-
-```nginx
-server {
-    listen 80;
-    root /var/www/onestream-accelerator/dist;
-    index index.html;
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
+To deploy your own fork:
+1. Fork this repository
+2. Go to **Settings → Pages → Source: GitHub Actions**
+3. Push to `main` — done
 
 ---
 
-## Disclaimer
+## Feedback & Contributing
 
-This tool is designed to assist in the **planning and documentation** phase of a OneStream implementation. The XML output is a configuration blueprint — it is not directly importable into OneStream Platform. All configuration must be implemented by a certified OneStream consultant using the OneStream Platform administration interface.
+**Found a bug? Have a feature request? Want to add guidance for a step?**
 
-OneStream is a registered trademark of OneStream Software LLC. This tool is not affiliated with or endorsed by OneStream Software LLC.
+👉 **[Open an issue on GitHub](https://github.com/max-paul/OneStreamAccel/issues/new)**
+
+All feedback is welcome — especially from practicing OneStream consultants who can spot incorrect guidance, missing fields, or edge cases from real engagements.
+
+### Ways to contribute
+
+- **Report incorrect OneStream guidance** — if something in an InfoBox or Column Guide is wrong or outdated for your version, open an issue
+- **Suggest missing fields** — if a step is missing a configuration option you use on real engagements, open an issue or PR
+- **Add a new XML generator** — the `src/utils/generators/` folder makes it easy to add new importable file types
+- **Improve default values** — if the pre-populated scenario/flow/user group defaults don't reflect best practices for your industry, suggest better ones
+- **Share your use case** — even just leaving a comment on an issue saying how you use this helps prioritize future work
+
+### Development
+
+```bash
+git clone https://github.com/max-paul/OneStreamAccel.git
+cd OneStreamAccel
+npm install
+npm run dev
+```
+
+Adding a new configuration step:
+1. Add definition to `src/data/constants.js`
+2. Create `src/components/steps/StepYourName.jsx` — use `InfoBox` and `ColumnGuide`
+3. Register in `src/components/steps/index.js`
+4. Add validation to `src/utils/validation.js`
+5. Add to `src/utils/xml.js` (design spec) and `src/utils/generators/` (OneStream format)
 
 ---
 
-*Built for the world's leading OneStream implementation teams.*
+## OneStream Implementation Reference
+
+### Required System Accounts
+
+Every OneStream consolidation application requires these accounts or the Balance Sheet equation will not hold:
+
+| Account Member | Type | Purpose |
+|---|---|---|
+| `TOTAL_ASSETS` | Heading | Top parent of all asset accounts |
+| `TOTAL_LIABILITIES` | Heading | Top parent of all liability accounts |
+| `TOTAL_EQUITY` | Heading | Parent of Retained Earnings + CTA + reserves |
+| `NET_INCOME` | Calculated | Links P&L to Balance Sheet — Total Revenue minus Total Expenses |
+| `RETAINED_EARNINGS` | Equity | Accumulates prior-year net income each year |
+| `EQ_CTA` | Equity | Cumulative Translation Adjustment — required for multi-currency |
+
+### Critical Implementation Rules
+
+| Rule | Why It Matters |
+|---|---|
+| Time Profile is permanent | Cannot be changed after data is loaded without a full application rebuild |
+| App ID cannot change | Used throughout business rules, APIs, and integrations |
+| Account member names are permanent | Referenced in rules, reports, and data loads — renaming breaks everything |
+| Actual scenario must have Period lock | Protects historical data from accidental modification — SOX control point |
+| Every consol node needs an Elimination entity | Without it, intercompany transactions will not eliminate |
+| CTA account required for multi-currency | Without it, the Balance Sheet will not balance after FX translation |
+| No System Admin for end users | OneStream sysadmin can delete cubes, export all data, impersonate any user |
+| Preparer ≠ Approver (SoD) | Standard SOX / ICFR Segregation of Duties requirement |
+
+---
+
+## Frequently Asked Questions
+
+**Is this officially supported by OneStream Software?**
+No. This is an independent open-source tool. OneStream is a registered trademark of OneStream Software LLC. This project is not affiliated with or endorsed by OneStream Software LLC.
+
+**Can the generated XML files really be imported into OneStream?**
+Yes — the 7 files in the **OneStream Import Files** tab are generated in the exact `OneStreamXF v9.3.0.18429` format used by OneStream's import wizard. Dimension member data (accounts, entities, etc.) uses a separate CSV/Excel import via Dimension Management.
+
+**Does this support OneStream v8.x?**
+The XML format is targeted at v9.3. Most configuration concepts are identical across v8 and v9, but some element names or attribute values may differ. Review generated files before importing into a v8 environment.
+
+**Is my data secure?**
+All data is stored exclusively in your browser's localStorage. Nothing is sent to any server. The application has no backend, no analytics, and no telemetry.
+
+**Can multiple people work on the same project?**
+Export the `.json` project file and share it. Anyone can load it via the "Load project file" button. For team workflows, commit the JSON file to your Git repository alongside the codebase.
+
+**What happens if I reload the page?**
+Your project is automatically saved to localStorage on every change. It will still be there after reloading, closing the tab, or restarting the browser — on the same device and browser.
+
+---
+
+## License
+
+MIT — free to use, modify, and distribute. See [LICENSE](LICENSE) for details.
+
+---
+
+*Built for the OneStream consulting community. If this saves you time on an engagement, consider starring the repo or sharing it with a colleague.*
+
+[![Star on GitHub](https://img.shields.io/github/stars/max-paul/OneStreamAccel?style=social)](https://github.com/max-paul/OneStreamAccel)

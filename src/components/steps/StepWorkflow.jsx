@@ -59,7 +59,7 @@ export default function StepWorkflow({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-workflow" />Workflow Profiles</div>
         <ColumnGuide columns={WF_GUIDE} />
-        <TblInput cols={COLS} rows={d.workflows || []} onChange={(r) => f('workflows', r)} addLabel="Add workflow profile" />
+        <TblInput cols={COLS} rows={d.workflows || []} onChange={(r) => f('workflows', r)} addLabel="Add workflow profile" csvFilename="workflow-profiles" />
       </div>
 
       <InfoBox type="tip" title="The 3-Step Workflow Covers 90% of Use Cases">

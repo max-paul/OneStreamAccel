@@ -61,7 +61,7 @@ export default function StepTransform({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-transform" />Transformation Rules</div>
         <ColumnGuide columns={TR_GUIDE} />
-        <TblInput cols={COLS} rows={d.transforms || []} onChange={(r) => f('transforms', r)} addLabel="Add transformation rule" />
+        <TblInput cols={COLS} rows={d.transforms || []} onChange={(r) => f('transforms', r)} addLabel="Add transformation rule" csvFilename="transformation-rules" />
       </div>
 
       <InfoBox type="warning" title="The Catch-All Rule — Non-Negotiable for Production Quality">

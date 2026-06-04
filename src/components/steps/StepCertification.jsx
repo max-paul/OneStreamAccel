@@ -54,7 +54,7 @@ export default function StepCertification({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-certificate" />Certification Profiles</div>
         <ColumnGuide columns={CERT_GUIDE} />
-        <TblInput cols={COLS} rows={d.certifications || []} onChange={(r) => f('certifications', r)} addLabel="Add certification" />
+        <TblInput cols={COLS} rows={d.certifications || []} onChange={(r) => f('certifications', r)} addLabel="Add certification" csvFilename="certifications" />
       </div>
 
       <InfoBox type="tip" title="Risk-Based Prioritization — Start With High-Risk Accounts">

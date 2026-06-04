@@ -58,6 +58,7 @@ export default function StepCurrency({ data, onChange }) {
           rows={d.currencies || DEFAULT_ROWS}
           onChange={(r) => f('currencies', r)}
           addLabel="Add currency"
+          csvFilename="currencies"
         />
         <div className="field-hint" style={{ marginTop: '10px' }}>
           Add every currency used by any entity. You must include the group reporting currency (mark as Yes), plus all local functional currencies of subsidiary entities. Missing currencies will cause data load failures for entities reporting in that currency.

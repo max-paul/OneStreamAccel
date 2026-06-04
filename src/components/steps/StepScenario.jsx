@@ -83,7 +83,7 @@ export default function StepScenario({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-layers-difference" />Scenario Members</div>
         <ColumnGuide columns={GUIDE} />
-        <TblInput cols={COLS} rows={rows} onChange={(r) => f('scenarios', r)} addLabel="Add scenario" />
+        <TblInput cols={COLS} rows={rows} onChange={(r) => f('scenarios', r)} addLabel="Add scenario" csvFilename="scenarios" />
       </div>
 
       <InfoBox type="warning" title="Lock Type is Your Data Integrity Control — Set It Correctly">

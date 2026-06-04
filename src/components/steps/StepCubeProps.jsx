@@ -61,7 +61,7 @@ export default function StepCubeProps({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-box" />Cube Definitions</div>
         <ColumnGuide columns={CUBE_GUIDE} />
-        <TblInput cols={COLS} rows={d.cubes || []} onChange={(r) => f('cubes', r)} addLabel="Add cube" />
+        <TblInput cols={COLS} rows={d.cubes || []} onChange={(r) => f('cubes', r)} addLabel="Add cube" csvFilename="cubes" />
       </div>
 
       <InfoBox type="tip" title="How Many Cubes? Start With One.">

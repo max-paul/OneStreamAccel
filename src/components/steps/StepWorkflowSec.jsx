@@ -49,7 +49,7 @@ export default function StepWorkflowSec({ data, onChange }) {
       <div className="form-card">
         <div className="form-card-title"><i className="ti ti-lock" />Workflow Security Rules</div>
         <ColumnGuide columns={WFSEC_GUIDE} />
-        <TblInput cols={COLS} rows={d.wfSec || []} onChange={(r) => f('wfSec', r)} addLabel="Add security rule" />
+        <TblInput cols={COLS} rows={d.wfSec || []} onChange={(r) => f('wfSec', r)} addLabel="Add security rule" csvFilename="workflow-security" />
       </div>
 
       <InfoBox type="critical" title="Segregation of Duties — This Is an Audit Control Point">
