@@ -176,3 +176,76 @@ select option { background: var(--bg3); }
 
 .import-area { border: 1px dashed var(--border2); border-radius: var(--radius-lg); padding: 1.5rem; text-align: center; cursor: pointer; transition: border-color 0.15s; }
 .import-area:hover { border-color: var(--accent); }
+
+/* Required field indicator */
+.req { color: var(--danger); margin-left: 3px; font-size: 13px; line-height: 1; }
+
+/* Validation error state on inputs */
+input.input-error, select.input-error, textarea.input-error {
+  border-color: var(--danger) !important;
+}
+
+/* Validation error message */
+.validation-errors {
+  background: rgba(239,68,68,0.07);
+  border: 1px solid rgba(239,68,68,0.22);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+}
+.validation-errors-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--danger);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.validation-errors ul { margin: 0; padding-left: 1.25rem; }
+.validation-errors li { font-size: 12.5px; color: var(--text2); line-height: 1.7; }
+
+/* Nav dot warning state */
+.nav-dot.warning { background: var(--warning); border-color: var(--warning); }
+
+/* Step description under page title */
+.step-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.step-phase-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(79,142,247,0.12);
+  color: var(--accent);
+}
+
+/* Checklist items */
+.checklist { display: flex; flex-direction: column; gap: 8px; }
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg3);
+  border-radius: var(--radius);
+  font-size: 13px;
+  color: var(--text2);
+}
+.checklist-item.done { color: var(--text); }
+.checklist-item i { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.checklist-item i.done-icon { color: var(--success); }
+.checklist-item i.empty-icon { color: var(--text3); }
+.checklist-item i.warn-icon  { color: var(--warning); }
+
+/* Two-column form grid variant */
+.form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+
+/* Subtle section divider inside form-card */
+.form-section-divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+/* Field hint text */
+.field-hint { font-size: 11px; color: var(--text3); margin-top: 3px; line-height: 1.5; }

@@ -1,5 +1,5 @@
 import { PHASES, STEPS, STEP_ORDER } from '../data/constants';
-import { getStepStatus } from '../utils/completion';
+import { getEnhancedStepStatus } from '../utils/validation';
 
 export default function Sidebar({ project, view, onNavigate, doneCount, completion }) {
   return (
@@ -16,7 +16,7 @@ export default function Sidebar({ project, view, onNavigate, doneCount, completi
         </div>
         <div className={`nav-item ${view === 'output' ? 'active' : ''}`} onClick={() => onNavigate('output')}>
           <i className="ti ti-code" style={{ fontSize: '14px', color: 'var(--text3)' }} />
-          Export output
+          Export / Output
         </div>
       </div>
 
@@ -26,16 +26,26 @@ export default function Sidebar({ project, view, onNavigate, doneCount, completi
         <div key={phase.id} className="phase-group">
           <div className="phase-label">{phase.label}</div>
           {phase.steps.map((stepId) => {
-            const status = getStepStatus(project, stepId);
+            const status   = getEnhancedStepStatus(project, stepId);
             const isActive = view === stepId;
+            const dotClass = [
+              'nav-dot',
+              status === 'done'    ? 'done'    : '',
+              status === 'warning' ? 'warning' : '',
+              isActive && status === 'empty' ? 'active' : '',
+            ].filter(Boolean).join(' ');
+
             return (
               <div
                 key={stepId}
                 className={`nav-item ${isActive ? 'active' : ''}`}
                 onClick={() => onNavigate(stepId)}
               >
-                <div className={`nav-dot ${status === 'done' ? 'done' : ''} ${isActive && status !== 'done' ? 'active' : ''}`} />
-                {STEPS[stepId].label}
+                <div className={dotClass} />
+                <span style={{ flex: 1 }}>{STEPS[stepId].label}</span>
+                {STEPS[stepId].required && status === 'empty' && (
+                  <span style={{ fontSize: '9px', color: 'var(--text3)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>REQ</span>
+                )}
               </div>
             );
           })}
@@ -44,7 +54,7 @@ export default function Sidebar({ project, view, onNavigate, doneCount, completi
 
       <div className="sidebar-footer">
         <div className="progress-label">
-          <span>{doneCount} / {STEP_ORDER.length} steps</span>
+          <span>{doneCount} / {STEP_ORDER.length} steps complete</span>
           <span>{completion}%</span>
         </div>
         <div className="progress-bar-wrap">
