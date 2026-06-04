@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    ApplicationProperties.xml Structure Template
+    ===============================================
+    Global application settings and per-scenario-type overrides.
+
+    Two <property> forms:
+      1) Simple:          <property name="PropName" value="Value"/>
+      2) Per-ScenarioType: <property name="PropName" scenarioType="Actual" value="Value"/>
+
+    Known scenarioType values:
+      Default, Actual, Administration, Budget, Control, Flash,
+      Forecast, FXModel, History, LongTerm, Model, Operational,
+      Plan, Sustainability, Target, Tax, Variance,
+      ScenarioType1 through ScenarioType8
+
+    Known property names (global):
+      GlobalScenario, GlobalTime, CompanyName, LogoFileName, LogoFileBytes,
+      NumberFormat, StartYear, EndYear, CurrencyFilter
+
+    Known property names (per scenario type):
+      EnforceGlobalPOV, AllowLoadsBeforeWFViewYear, AllowLoadsAfterWFViewYear,
+      LockAfterCertify
+
+    Report formatting properties (global):
+      ReportLogoHeight, ReportLogoBottomMargin,
+      ReportTitleTopMargin, ReportTitleFontFamily, ReportTitleFontSize,
+      ReportTitleBold, ReportTitleItalic, ReportTitleTextColor,
+      ReportPageLabelTopMargin, ReportPageLabelBottomMargin,
+      ReportPageLabelFontFamily, ReportPageLabelFontSize,
+      ReportPageLabelBold, ReportPageLabelItalic, ReportPageLabelTextColor,
+      ReportHeaderBarBackgroundColor, ReportHeaderLineColor,
+      ReportFooterFontFamily, ReportFooterFontSize,
+      ReportFooterShowLine, ReportFooterShowDate, ReportFooterShowPageNum,
+      ReportFooterText, ReportFooterLineColor, ReportFooterTextColor
+  -->
+  <applicationPropertiesRoot>
+    <applicationProperties>
+
+      <!-- ── GLOBAL APPLICATION SETTINGS ──────────────────────────────── -->
+
+      <!-- GlobalScenario: default scenario loaded at login (must match a scenario in your metadata) -->
+      <property name="GlobalScenario" value="Actual" />
+
+      <!-- GlobalTime: default time period format examples:
+           Monthly  : 2024M1 through 2024M12
+           Quarterly: 2024Q1 through 2024Q4
+           Half-year: 2024H1, 2024H2
+           Annual   : 2024 -->
+      <property name="GlobalTime" value="2024M1" />
+
+      <property name="CompanyName" value="Your Company Name" />
+      <!-- LogoFileName: filename only (no path); file must be uploaded via Administration > Files -->
+      <property name="LogoFileName" value="" />
+      <property name="LogoFileBytes" value="" />
+
+      <!-- NumberFormat: Excel-style format string  positive;negative;zero
+           Examples: #,##0.0;    (one decimal, blank negatives)
+                     #,##0;(#,##0);-   (parenthesis negatives, dash for zero)
+                     #,##0.00;[Red](#,##0.00);-  (red negative) -->
+      <property name="NumberFormat" value="#,##0.0;" />
+
+      <!-- StartYear / EndYear: fiscal year range; must cover ALL time periods used in the application -->
+      <property name="StartYear" value="2020" />
+      <property name="EndYear" value="2030" />
+
+      <!-- CurrencyFilter: leave blank for all currencies, or pipe-delimited list e.g. USD|EUR|GBP -->
+      <property name="CurrencyFilter" value="" />
+
+      <!-- Per scenario type: EnforceGlobalPOV -->
+      <property name="EnforceGlobalPOV" scenarioType="Default"  value="false" />
+      <property name="EnforceGlobalPOV" scenarioType="Actual"   value="false" />
+      <property name="EnforceGlobalPOV" scenarioType="Budget"   value="false" />
+      <property name="EnforceGlobalPOV" scenarioType="Forecast" value="false" />
+
+      <!-- Per scenario type: AllowLoadsBeforeWFViewYear -->
+      <property name="AllowLoadsBeforeWFViewYear" scenarioType="Default"  value="false" />
+      <property name="AllowLoadsBeforeWFViewYear" scenarioType="Actual"   value="false" />
+      <property name="AllowLoadsBeforeWFViewYear" scenarioType="Budget"   value="false" />
+      <property name="AllowLoadsBeforeWFViewYear" scenarioType="Forecast" value="false" />
+
+      <!-- Per scenario type: AllowLoadsAfterWFViewYear -->
+      <property name="AllowLoadsAfterWFViewYear" scenarioType="Default"  value="false" />
+      <property name="AllowLoadsAfterWFViewYear" scenarioType="Actual"   value="false" />
+      <property name="AllowLoadsAfterWFViewYear" scenarioType="Budget"   value="false" />
+      <property name="AllowLoadsAfterWFViewYear" scenarioType="Forecast" value="false" />
+
+      <!-- Per scenario type: LockAfterCertify -->
+      <property name="LockAfterCertify" scenarioType="Default"  value="false" />
+      <property name="LockAfterCertify" scenarioType="Actual"   value="false" />
+      <property name="LockAfterCertify" scenarioType="Budget"   value="false" />
+      <property name="LockAfterCertify" scenarioType="Forecast" value="false" />
+
+      <!-- ── REPORT FORMATTING ──────────────────────────────────────────
+           Color values: R,G,B format (each 0-255)
+             Common colors: 0,0,0=Black  255,255,255=White  0,70,127=OneStream Blue
+                            255,0,0=Red  0,128,0=Green  128,128,128=Gray
+           Margin/Height values: integers in points (1 point ≈ 0.014 inches)
+           Font family: any installed font name e.g. Calibri | Arial | Times New Roman
+      ──────────────────────────────────────────────────────────────── -->
+      <property name="ReportLogoHeight"                value="0" />
+      <property name="ReportLogoBottomMargin"          value="0" />
+      <property name="ReportTitleTopMargin"            value="0" />
+      <property name="ReportTitleFontFamily"           value="Calibri" />
+      <property name="ReportTitleFontSize"             value="14" />
+      <property name="ReportTitleBold"                 value="true" />
+      <property name="ReportTitleItalic"               value="false" />
+      <property name="ReportTitleTextColor"            value="0,0,0" />
+      <property name="ReportPageLabelTopMargin"        value="0" />
+      <property name="ReportPageLabelBottomMargin"     value="0" />
+      <property name="ReportPageLabelFontFamily"       value="Calibri" />
+      <property name="ReportPageLabelFontSize"         value="11" />
+      <property name="ReportPageLabelBold"             value="false" />
+      <property name="ReportPageLabelItalic"           value="false" />
+      <property name="ReportPageLabelTextColor"        value="0,0,0" />
+      <property name="ReportHeaderBarBackgroundColor"  value="0,70,127" />
+      <property name="ReportHeaderLineColor"           value="0,0,0" />
+      <property name="ReportFooterFontFamily"          value="Calibri" />
+      <property name="ReportFooterFontSize"            value="9" />
+      <property name="ReportFooterShowLine"            value="true" />
+      <property name="ReportFooterShowDate"            value="true" />
+      <property name="ReportFooterShowPageNum"         value="true" />
+      <property name="ReportFooterText"                value="" />
+      <property name="ReportFooterLineColor"           value="0,0,0" />
+      <property name="ReportFooterTextColor"           value="0,0,0" />
+
+    </applicationProperties>
+  </applicationPropertiesRoot>
+</OneStreamXF>

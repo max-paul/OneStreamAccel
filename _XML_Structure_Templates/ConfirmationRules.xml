@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    ConfirmationRules.xml Structure Template
+    =========================================
+    confirmationGroup attrs:
+      name, description, scenarioTypeName (e.g. Unknown), accessGroup, maintenanceGroup
+    confirmationRule attrs:
+      name, requirementFrequency (AllTimePeriods|Monthly), timeFilterForReqtFreq,
+      text, displayType (Rule), ruleFormula (VB.NET code),
+      failureAction (WarningPass|Fail), failureMessage, warningMessage, displayOrder
+    confirmationProfile attrs:
+      name, description, cubeName, scenarioTypeName, accessGroup, maintenanceGroup
+    member attrs:
+      name
+  -->
+  <confirmationRulesRoot>
+    <confirmationGroups>
+      <confirmationGroup
+        name="GroupName"
+        description="Group description"
+        scenarioTypeName="Unknown"
+        accessGroup="Everyone"
+        maintenanceGroup="Administrators">
+        <confirmationRules>
+          <!-- QUICK REFERENCE:
+               requirementFrequency : AllTimePeriods | Monthly | Quarterly | Annual
+               timeFilterForReqtFreq: blank = all periods; or e.g. M12 = December only
+               displayType          : Rule (only valid option)
+               scenarioTypeName     : Unknown = all scenario types
+                                      Or specific: Actual | Budget | Forecast | Plan | etc.
+               failureAction        : WarningPass = show warning but allow workflow to proceed
+                                      Fail        = block workflow step until rule passes
+               ruleFormula          : VB.NET code returning True (pass) or False (fail)
+                 Examples:
+                   Return True
+                   Return api.Cell("S#Actual.T#2024M1.E#Entity1.A#Revenue") > 0
+                   Return si.ScenarioName = "Actual"
+               displayOrder         : integer; lower = shown first in the UI list
+          -->
+          <confirmationRule
+            name="Rule Name"
+            requirementFrequency="AllTimePeriods"
+            timeFilterForReqtFreq=""
+            text="Display text shown to the user"
+            displayType="Rule"
+            ruleFormula="Return True"
+            failureAction="WarningPass"
+            failureMessage="Message shown on failure"
+            warningMessage=""
+            displayOrder="1" />
+        </confirmationRules>
+      </confirmationGroup>
+    </confirmationGroups>
+    <confirmationProfiles>
+      <confirmationProfile
+        name="Profile Name"
+        description="Profile description"
+        cubeName="(All)"
+        scenarioTypeName="(All)"
+        accessGroup="Everyone"
+        maintenanceGroup="Administrators">
+        <members>
+          <member name="GroupName" />
+        </members>
+      </confirmationProfile>
+    </confirmationProfiles>
+  </confirmationRulesRoot>
+</OneStreamXF>

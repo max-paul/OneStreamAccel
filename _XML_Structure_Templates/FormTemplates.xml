@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    FormTemplates.xml Structure Template
+    ======================================
+    formTemplateGroup attrs:
+      name, description, accessGroup, maintenanceGroup
+    formTemplate attrs:
+      name, description,
+      formType (CubeView|Excel),
+      itemName (name of the CubeView or Excel file),
+      requirementLevel (Required|Optional),
+      requirementFrequency (AllTimePeriods|Monthly),
+      timeFilterForReqtFreq, timeFilterForCompleteForm
+    XFFormTemplateOptions children:
+      LiteralParameterValues (self-closing),
+      RefreshSpreadsheetWhenOpened (true|false),
+      Parameters (self-closing)
+    excelFileName : name of the attached Excel file
+    excelFile     : base64-encoded Excel file content in CDATA
+    formTemplateProfiles : self-closing when empty
+  -->
+  <formTemplatesRoot>
+    <!-- FORM TEMPLATE QUICK REFERENCE:
+         formType="CubeView"  → itemName = existing CubeView item name (from CubeViews.xml)
+                                 excelFileName and excelFile are left empty
+         formType="Excel"     → itemName = blank
+                                 excelFileName = the .xlsx filename stored in the application
+                                 excelFile     = base64-encoded Excel binary in CDATA (typically large;
+                                                 export the form from OneStream UI rather than encoding by hand)
+         requirementLevel options  : Required | Optional
+           Required = user must submit this form before workflow can advance
+           Optional = form is available but does not block the workflow
+         requirementFrequency opts : AllTimePeriods | Monthly | Quarterly | Annual
+         timeFilterForReqtFreq     : blank = all periods; or time member e.g. M12 for year-end only
+         timeFilterForCompleteForm  : additional filter determining when the form shows as "complete"
+         RefreshSpreadsheetWhenOpened: true = Excel recalculates on open; only applies to Excel forms
+    -->
+    <formTemplateGroups>
+      <formTemplateGroup
+        name="Group Name"
+        description=""
+        accessGroup="Everyone"
+        maintenanceGroup="Administrators">
+        <formTemplates>
+          <formTemplate
+            name="Template Name"
+            description=""
+            formType="CubeView"
+            itemName="CubeViewItemName"
+            requirementLevel="Required"
+            requirementFrequency="AllTimePeriods"
+            timeFilterForReqtFreq=""
+            timeFilterForCompleteForm="">
+            <XFFormTemplateOptions>
+              <LiteralParameterValues />
+              <RefreshSpreadsheetWhenOpened>true</RefreshSpreadsheetWhenOpened>
+              <Parameters />
+            </XFFormTemplateOptions>
+            <excelFileName></excelFileName>
+            <excelFile><![CDATA[]]></excelFile>
+          </formTemplate>
+        </formTemplates>
+      </formTemplateGroup>
+    </formTemplateGroups>
+    <formTemplateProfiles />
+  </formTemplatesRoot>
+</OneStreamXF>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    TransformationRules.xml Structure Template
+    ============================================
+    Maps stage dimension values to finance dimension values for data loading.
+
+    transformationGroup attributes:
+      name           - unique group name
+      description    - text description
+      stageDimName   - stage (source) dimension name
+      financeDimName - finance (target) dimension name
+      accessGroup    - who can use this group
+      maintenanceGroup - who can edit this group
+
+    transformationRule attributes:
+      name             - unique rule name
+      type             - "TransformMask" | "TransformOneToOne"
+      description      - text description
+      outputValue      - the finance dimension value to output
+      flipSign         - "true" | "false" (multiply amount by -1)
+      ruleExpression   - mask or exact match expression for source value
+                         TransformMask uses wildcards: * = any chars, ? = one char
+                         TransformOneToOne uses exact match
+      logicalOperator  - "" | "And" | "Or" (for multi-condition rules)
+      logicalExpression - secondary filter expression
+      derivativeType   - "" | "UD1" | "UD2" | ... (for derivative dim mapping)
+      executionOrder   - integer sort order (lower = evaluated first)
+
+    transformationProfiles section:
+      Assigns transformation groups to workflow profiles/cubes.
+      (Add <transformationProfile> elements as needed)
+  -->
+  <transformationRulesRoot>
+
+    <!-- Optional: Parser/other business rules referenced by transform groups -->
+    <businessRules />
+
+    <transformationGroups>
+
+      <!-- Example: Account dimension transformation group -->
+      <transformationGroup
+        name="AccountTransformGroup"
+        description="Maps source account codes to finance accounts"
+        stageDimName="Account"
+        financeDimName="Account"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <transformationRules>
+
+          <!-- TRANSFORMATION RULE QUICK REFERENCE:
+               type = TransformMask (wildcard matching):
+                 ruleExpression wildcards:
+                   *        = any number of characters    e.g. "6*" matches 6000, 6100, 6XXXX
+                   ?        = exactly one character        e.g. "10?" matches 100–109
+                   6*|7*    = pipe separates OR patterns   e.g. "6*|7*" matches both 6xxx and 7xxx
+               type = TransformOneToOne (exact match):
+                 ruleExpression = the exact source value (case-sensitive)
+               outputValue: the finance dimension member to write
+               flipSign   : true = multiply amount by -1 on load (common for revenue/liability accounts)
+               executionOrder: lower numbers evaluated first; first matching rule wins
+               logicalOperator + logicalExpression: AND/OR secondary condition on another source field
+               derivativeType: blank = maps the primary dimension
+                               UD1..UD8 = maps a user-defined dimension instead (useful for derived dims)
+          -->
+
+          <!-- TransformMask example: wildcard matching -->
+          <transformationRule
+            name="RuleName_Mask"
+            type="TransformMask"
+            description="Map source values starting with 6 to Revenue account"
+            outputValue="Revenue"
+            flipSign="false"
+            ruleExpression="6*"
+            logicalOperator=""
+            logicalExpression=""
+            derivativeType=""
+            executionOrder="10" />
+
+          <!-- TransformOneToOne example: exact value matching -->
+          <transformationRule
+            name="RuleName_OneToOne"
+            type="TransformOneToOne"
+            description="Exact match of source value to output"
+            outputValue="TargetFinanceValue"
+            flipSign="false"
+            ruleExpression="ExactSourceValue"
+            logicalOperator=""
+            logicalExpression=""
+            derivativeType=""
+            executionOrder="20" />
+
+        </transformationRules>
+      </transformationGroup>
+
+    </transformationGroups>
+
+    <!-- TRANSFORMATION PROFILE GUIDE:
+         Links transformation groups to cubes/scenarios for automatic execution during data loads.
+         The profile is referenced when running a Data Management Load step.
+
+         Structure:
+           <transformationProfile name="ProfileName" cubeName="CubeName" scenarioTypeName="(All)"
+                                  accessGroup="Everyone" maintenanceGroup="Everyone">
+             <members>
+               <member name="AccountTransformGroup" />  <!-- must match a transformationGroup name -->
+             </members>
+           </transformationProfile>
+
+         cubeName         : specific cube or "(All)"
+         scenarioTypeName : "(All)" or specific type (Actual | Budget | Forecast | etc.)
+    -->
+    <transformationProfiles>
+      <!-- Assigns transformation groups to cube/workflow profiles -->
+      <!-- Add <transformationProfile> elements as needed -->
+    </transformationProfiles>
+
+  </transformationRulesRoot>
+</OneStreamXF>

@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    DataSources.xml Structure Template
+    =====================================
+    Contains two major sections:
+      1. businessRules  - Parser and Connector business rules
+      2. dataSources    - Data source definitions (Delimited or Connector-based)
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    BUSINESS RULE attributes:
+      businessRuleType - "Parser" | "Connector"
+      name             - unique name
+
+    Inner elements: (same pattern for both types)
+      accessGroup, maintenanceGroup, isGlobal,
+      businessRuleLanguageType ("VisualBasic" | "CSharp"),
+      isEncrypted ("true" | "false"),
+      referencedAssemblies -> referencedAssembly[],
+      sourceCode (CDATA block)
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    DATA SOURCE attributes:
+      name                  - unique data source name
+      description           - text description
+      cubeName              - target cube name
+      scenarioTypeName      - "(All)" or specific scenario type
+      dataSourceType        - "Delimited" | "Connector"
+      dataStructureType     - "Matrix" | "Tabular"
+      delimiter             - "," for CSV (Delimited only)
+      quoteCharacter        - &quot; for double-quote (Delimited only)
+      connectorName         - name of Connector business rule (Connector type only)
+      connectorUsesFile     - "true" | "false" (Connector type)
+      allowDynamicExcelLoads - "true" | "false"
+      accessGroup           - who can use this data source
+      maintenanceGroup      - who can edit this data source
+
+    DATA SOURCE inner element: <dimensions>
+      Each <dimension> maps a stage dimension slot to a source field/value.
+
+      dimension attributes:
+        position      - integer (10=Scenario, 20=Time, 30=Entity, etc.)
+        stageDimName  - stage dimension identifier
+        dataType      - data type key (e.g. "CurrentDataKeyScenario")
+
+      dimension child: <attributes> -> <attribute>
+        Key attribute names:
+          DelimitedPosition  - column position in delimited file (1-based)
+          StartPosition      - fixed-width start position
+          Length             - fixed-width field length
+          ConnectorSourceFieldName - field name from connector GetFieldList (Connector type)
+          TextStaticValue    - hardcoded static value
+          NumericFactor      - multiplication factor for numeric values
+          NumericPrecision   - decimal places
+          NumericZeroSuppress - "true" | "false"
+          NumericMarker      - marker character for numeric parsing
+          TextLeadFill       - fill character padding left
+          TextTrailFill      - fill character padding right
+          StoredTextBypass   - "true" | "false"
+          LogicalOperator    - "" | "And" | "Or"
+          LogicalExpression  - filter expression for conditional mapping
+
+    Common stage dimension positions and names:
+      pos 10  - Sn  (Scenario)
+      pos 20  - Tm  (Time)
+      pos 30  - E   (Entity)
+      pos 40  - A   (Account)
+      pos 50  - F   (Flow)
+      pos 60  - IC  (Intercompany)
+      pos 70  - UD1 through UD8
+      pos 150 - Amt (Amount)
+      pos 160 - SrcID (SourceID)
+      pos 170 - Lbl   (Label)
+  -->
+  <dataSourcesRoot>
+
+    <businessRules>
+
+      <!-- Parser Business Rule example -->
+      <businessRule businessRuleType="Parser" name="ParserRuleName">
+        <accessGroup>Everyone</accessGroup>
+        <maintenanceGroup>Everyone</maintenanceGroup>
+        <isGlobal>false</isGlobal>
+        <businessRuleLanguageType>VisualBasic</businessRuleLanguageType>
+        <isEncrypted>false</isEncrypted>
+        <referencedAssemblies />
+        <sourceCode><![CDATA[
+' VB.NET Parser business rule stub
+Imports OneStream.Stage.Engine
+Namespace OneStream.BusinessRule.Parser.ParserRuleName
+  Public Class MainClass
+    Public Function Main(ByVal si As SessionInfo, ByVal globals As BRGlobals, ByVal api As ParserDimension, ByVal args As ParserArgs) As Object
+      Try
+        Return Nothing
+      Catch ex As Exception
+        Throw ErrorHandler.LogWrite(si, New XFException(si, ex))
+      End Try
+    End Function
+  End Class
+End Namespace
+        ]]></sourceCode>
+      </businessRule>
+
+      <!-- Connector Business Rule example (VB.NET) -->
+      <businessRule businessRuleType="Connector" name="ConnectorRuleName">
+        <accessGroup>Everyone</accessGroup>
+        <maintenanceGroup>Everyone</maintenanceGroup>
+        <isGlobal>false</isGlobal>
+        <businessRuleLanguageType>VisualBasic</businessRuleLanguageType>
+        <isEncrypted>false</isEncrypted>
+        <referencedAssemblies />
+        <sourceCode><![CDATA[
+' VB.NET Connector business rule stub
+Imports OneStream.Stage.Engine
+Namespace OneStream.BusinessRule.Connector.ConnectorRuleName
+  Public Class MainClass
+    Public Function Main(ByVal si As SessionInfo, ByVal globals As BRGlobals, ByVal api As Transformer, ByVal args As ConnectorArgs) As Object
+      Try
+        Select Case args.ActionType
+          Case Is = ConnectorActionTypes.GetFieldList
+            Dim fieldList As New List(Of String)({"Field1", "Field2", "Field3"})
+            Return fieldList
+          Case Is = ConnectorActionTypes.GetData
+            ' Load and process data here
+            Return Nothing
+          Case Else
+            Return Nothing
+        End Select
+      Catch ex As Exception
+        Throw ErrorHandler.LogWrite(si, New XFException(si, ex))
+      End Try
+    End Function
+  End Class
+End Namespace
+        ]]></sourceCode>
+      </businessRule>
+
+      <!-- Connector Business Rule example (C#) -->
+      <businessRule businessRuleType="Connector" name="ConnectorRuleName_CSharp">
+        <accessGroup>Everyone</accessGroup>
+        <maintenanceGroup>Everyone</maintenanceGroup>
+        <isGlobal>false</isGlobal>
+        <businessRuleLanguageType>CSharp</businessRuleLanguageType>
+        <isEncrypted>false</isEncrypted>
+        <referencedAssemblies>
+          <referencedAssembly
+            isInBusinessRulesAssemblyFolder="false"
+            isOtherBusinessRule="false"
+            isWsAssembly="true"
+            isInEnvironmentSpecialFolder="false"
+            environmentSpecialFolder=""
+            assemblyName="Workspace.Default.AssemblyName" />
+        </referencedAssemblies>
+        <sourceCode><![CDATA[
+using System;
+using System.Collections.Generic;
+using OneStream.Shared.Common;
+using OneStream.Shared.Database;
+using OneStream.Shared.Wcf;
+using OneStream.Stage.Engine;
+
+namespace OneStream.BusinessRule.Connector.ConnectorRuleName_CSharp
+{
+    public class MainClass
+    {
+        public object Main(SessionInfo si, BRGlobals globals, Transformer api, ConnectorArgs args)
+        {
+            try
+            {
+                // Delegate to workspace assembly
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ErrorHandler.LogWrite(si, new XFException(si, ex));
+            }
+        }
+    }
+}
+        ]]></sourceCode>
+      </businessRule>
+
+    </businessRules>
+
+    <dataSources>
+
+      <!-- ── Delimited (CSV) Data Source ── -->
+      <dataSource
+        name="DelimitedDataSourceName"
+        description="Description of this data source"
+        cubeName="CubeName"
+        scenarioTypeName="(All)"
+        dataSourceType="Delimited"
+        dataStructureType="Matrix"
+        delimiter=","
+        quoteCharacter="&quot;"
+        connectorName="(Unassigned)"
+        connectorUsesFile="false"
+        allowDynamicExcelLoads="false"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <dimensions>
+
+          <!-- DIMENSION POSITION REFERENCE TABLE:
+               pos | stageDimName | dataType
+               ----+-------------+-----------------------------------
+                10 | Sn          | CurrentDataKeyScenario
+                20 | Tm          | CurrentDataKeyTime
+                30 | E           | CurrentDataKeyEntity
+                40 | A           | CurrentDataKeyAccount
+                50 | F           | CurrentDataKeyFlow
+                60 | IC          | CurrentDataKeyIC
+                70 | UD1         | CurrentDataKeyUD1
+                80 | UD2         | CurrentDataKeyUD2
+                90 | UD3         | CurrentDataKeyUD3
+               100 | UD4         | CurrentDataKeyUD4
+               110 | UD5         | CurrentDataKeyUD5
+               120 | UD6         | CurrentDataKeyUD6
+               130 | UD7         | CurrentDataKeyUD7
+               140 | UD8         | CurrentDataKeyUD8
+               150 | Amt         | Amount
+               160 | SrcID       | SourceID
+               170 | Lbl         | Label
+
+               Attribute usage:
+                 DelimitedPosition=0 + TextStaticValue="X" → hardcode a static value
+                 DelimitedPosition=N (N ≥ 1)               → read from column N of the file (1-based)
+                 ConnectorSourceFieldName="FieldName"       → map from connector GetFieldList result
+                 NumericFactor: multiply amount by this value (use -1 to flip sign)
+                 StoredTextBypass="true": skip transformation rules for this dimension
+          -->
+
+          <!-- Scenario dimension (position 10) - static value -->
+          <dimension position="10" stageDimName="Sn" dataType="CurrentDataKeyScenario">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="0" />
+              <attribute attributeName="TextStaticValue"    attributeValue="Actual" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- Time dimension (position 20) - from column 1 -->
+          <dimension position="20" stageDimName="Tm" dataType="CurrentDataKeyTime">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="1" />
+              <attribute attributeName="TextStaticValue"    attributeValue="" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- Entity dimension (position 30) - from column 2 -->
+          <dimension position="30" stageDimName="E" dataType="CurrentDataKeyEntity">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="2" />
+              <attribute attributeName="TextStaticValue"    attributeValue="" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- Account dimension (position 40) - from column 3 -->
+          <dimension position="40" stageDimName="A" dataType="CurrentDataKeyAccount">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="3" />
+              <attribute attributeName="TextStaticValue"    attributeValue="" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- Flow dimension (position 50) - static value -->
+          <dimension position="50" stageDimName="F" dataType="CurrentDataKeyFlow">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="0" />
+              <attribute attributeName="TextStaticValue"    attributeValue="Periodic" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- IC dimension (position 60) - static value -->
+          <dimension position="60" stageDimName="IC" dataType="CurrentDataKeyIC">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="0" />
+              <attribute attributeName="TextStaticValue"    attributeValue="[None]" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- UD1 dimension (position 70) - static value -->
+          <dimension position="70" stageDimName="UD1" dataType="CurrentDataKeyUD1">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="0" />
+              <attribute attributeName="TextStaticValue"    attributeValue="[None]" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- Amount (position 150) - from column 4 -->
+          <dimension position="150" stageDimName="Amt" dataType="Amount">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"      attributeValue="4" />
+              <attribute attributeName="NumericFactor"          attributeValue="1" />
+              <attribute attributeName="NumericPrecision"       attributeValue="0" />
+              <attribute attributeName="NumericZeroSuppress"    attributeValue="false" />
+              <attribute attributeName="NumericMarker"          attributeValue="" />
+            </attributes>
+          </dimension>
+
+          <!-- SourceID (position 160) - static value -->
+          <dimension position="160" stageDimName="SrcID" dataType="SourceID">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="0" />
+              <attribute attributeName="TextStaticValue"    attributeValue="FileImport" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <!-- Label (position 170) - static value -->
+          <dimension position="170" stageDimName="Lbl" dataType="Label">
+            <attributes>
+              <attribute attributeName="DelimitedPosition"  attributeValue="0" />
+              <attribute attributeName="TextStaticValue"    attributeValue="DataLoad" />
+              <attribute attributeName="StoredTextBypass"   attributeValue="false" />
+            </attributes>
+          </dimension>
+
+        </dimensions>
+      </dataSource>
+
+      <!-- ── Connector Data Source ── -->
+      <dataSource
+        name="ConnectorDataSourceName"
+        description="Description of this connector data source"
+        cubeName="CubeName"
+        scenarioTypeName="(All)"
+        dataSourceType="Connector"
+        dataStructureType="Tabular"
+        delimiter=","
+        quoteCharacter="&quot;"
+        connectorName="ConnectorRuleName"
+        connectorUsesFile="false"
+        allowDynamicExcelLoads="false"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <dimensions>
+
+          <!-- For Connector data sources, use ConnectorSourceFieldName attribute -->
+          <dimension position="10" stageDimName="Sn" dataType="CurrentDataKeyScenario">
+            <attributes>
+              <attribute attributeName="ConnectorSourceFieldName" attributeValue="ScenarioField" />
+              <attribute attributeName="TextStaticValue"          attributeValue="" />
+              <attribute attributeName="StoredTextBypass"         attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <dimension position="20" stageDimName="Tm" dataType="CurrentDataKeyTime">
+            <attributes>
+              <attribute attributeName="ConnectorSourceFieldName" attributeValue="TimeField" />
+              <attribute attributeName="TextStaticValue"          attributeValue="" />
+              <attribute attributeName="StoredTextBypass"         attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <dimension position="30" stageDimName="E" dataType="CurrentDataKeyEntity">
+            <attributes>
+              <attribute attributeName="ConnectorSourceFieldName" attributeValue="EntityField" />
+              <attribute attributeName="TextStaticValue"          attributeValue="" />
+              <attribute attributeName="StoredTextBypass"         attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <dimension position="40" stageDimName="A" dataType="CurrentDataKeyAccount">
+            <attributes>
+              <attribute attributeName="ConnectorSourceFieldName" attributeValue="AccountField" />
+              <attribute attributeName="TextStaticValue"          attributeValue="" />
+              <attribute attributeName="StoredTextBypass"         attributeValue="false" />
+            </attributes>
+          </dimension>
+
+          <dimension position="150" stageDimName="Amt" dataType="Amount">
+            <attributes>
+              <attribute attributeName="ConnectorSourceFieldName" attributeValue="AmountField" />
+              <attribute attributeName="NumericFactor"            attributeValue="1" />
+              <attribute attributeName="NumericPrecision"         attributeValue="0" />
+              <attribute attributeName="NumericZeroSuppress"      attributeValue="false" />
+            </attributes>
+          </dimension>
+
+        </dimensions>
+      </dataSource>
+
+    </dataSources>
+
+  </dataSourcesRoot>
+</OneStreamXF>

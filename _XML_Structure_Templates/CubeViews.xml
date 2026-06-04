@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    CubeViews.xml Structure Template
+    ==================================
+    Defines CubeView groups, items, and profiles.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    cubeViewGroup attributes:
+      name             - unique group name
+      workspace        - workspace this group belongs to
+      maintenanceUnit  - maintenance unit (optional)
+      description      - text description
+      accessGroup      - who can see this group
+      maintenanceGroup - who can edit this group
+
+    cubeViewItem attributes:
+      name                    - unique view name within the group
+      description             - text description
+      isVisibleInProfiles     - "true" | "false"
+      isShortcut              - "true" | "false"
+      shortcutCubeViewName    - name of target view (when isShortcut=true)
+      isDynamic               - "true" | "false"
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    cubeView inner elements:
+      pageCaption           - text caption above the view
+      canModifyData         - "true" | "false"
+      canCalculate          - "true" | "false"
+      canTranslate          - "true" | "false"
+      canConsolidate        - "true" | "false"
+      canModifySuppression  - "true" | "false"
+      includeCellAttachmentStatus - "true" | "false"
+      useDetailedLogging    - "true" | "false"
+      headerFormat          - header cell format string
+      cellFormat            - data cell format string
+      allowSparseRowSuppression - "true" | "false"
+      maxNumUnsuppressedRowsPerCubeViewPage - integer
+      maxNumSecondsToProcessCubeView - integer (0 = no limit)
+      formula               - CDATA formula string
+      reportTaskType        - "None" | "ExcelReport" | "PDFReport"
+      reportBRName          - report business rule name
+      reportPaperKind       - "Letter" | "A4" | etc.
+      reportIsLandscape     - "true" | "false"
+      reportMarginLeft/Top/Right/Bottom - decimal (inches)
+      reportAutoFitNumPagesWide - integer
+      reportScaleFactor     - decimal (1.0 = 100%)
+      reportAutoFitToPageWidth - "true" | "false"
+      excelExportDisplayGridlines - "true" | "false"
+      reportTitle           - text
+      reportHeaderLeftLabel1-4   - text labels
+      reportHeaderCenterLabel1-4 - text labels
+      reportHeaderRightLabel1-4  - text labels
+      reportFooter               - "true" | "false"
+      reportFooterLeftLabel1-4   - text labels
+      reportFooterCenterLabel1-4 - text labels
+      reportFooterRightLabel1-4  - text labels
+      rowSharingType             - "None" | "AllRowsFromAnotherCubeView" | ...
+      cubeViewNameForSharingAllRows  - reference view name
+      cubeViewNameForSharingAllRows2 - secondary reference
+      colSharingType             - "None" | "AllColsFromAnotherCubeView" | ...
+      cubeViewNameForSharingAllCols  - reference view name
+      cubeViewNameForSharingAllCols2 - secondary reference
+
+      cube -> name         - cube name
+      culture              - locale string (e.g. "en-US")
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    povMembers (Point of View):
+      Contains one element per dimension, each with:
+        name                         - member name or filter
+        memberFilter                 - member set expression
+        topLevelFilterForNextLevelExp - "true" | "false"
+
+      Dimension elements: entity, parent, consolidation,
+        scenario, time, view, account, flow, origin, ic,
+        ud1, ud2, ud3, ud4, ud5, ud6, ud7, ud8
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    Header/Row sizing elements:
+      useDefaultColumnHeaders    - "true" | "false"
+      columnHeaders              - number of column header rows
+      useDefaultRowHeaders       - "true" | "false"
+      rowHeaders                 - number of row header columns
+      reportColumnIndexForRowHeaders - integer
+      reportColumnHeader1-6Height - decimal (height in points)
+      rowHeader1-6Width           - integer (pixel width)
+      excelRowHeader1-6Width      - integer
+      reportRowHeader1-6Width     - decimal
+
+    headerTextTypes attributes (one per dimension):
+      entity, parent, consolidation, scenario, time, view,
+      account, flow, origin, ic, ud1-ud8
+      Values: "Name" | "Description" | "Both" | "None"
+
+    boundParameterNames attributes:
+      cube, entity, parent, consolidation, scenario, time,
+      view, account, flow, origin, ic, ud1-ud8
+      Values: bound parameter name or empty
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    columns / rows structure:
+      column (or row) attributes:
+        name                          - unique column/row name
+        shareSettingsFromAnotherCubeView - "true" | "false"
+        cubeViewNameForSharing        - view name to share from
+        cubeViewColNameForSharing     - specific column name to share
+
+      column (or row) inner elements:
+        width                - integer pixel width
+        reportWidth          - decimal (points)
+        canModifyData        - "true" | "false"
+        colHeaderFormat (or rowHeaderFormat) - header format string
+        cellFormat           - cell format string
+        cellType             - "Data" | "Formula" | "Text"
+        listParameter        - parameter name for list
+        linkedCubeViewNames  - pipe-delimited linked view names
+        linkedDashboardNames - pipe-delimited linked dashboard names
+
+        memberExpansions -> memberExpansion:
+          primaryDimType           - dimension type (Entity|Account|etc.)
+          memberFilter             - member set expression
+          initialIndentLevel       - integer indent level
+          suppressZeroCols         - "true" | "false"
+          suppressNoDataCols       - "true" | "false"
+          suppressInvalidCols      - "true" | "false"
+          useSuppressionSettingsOnParentCols - "true" | "false"
+          zeroSuppressionThreshold - decimal threshold
+          useToDetermineRowSuppression - "true" | "false"
+          allowSparseRowSuppression - "true" | "false"
+          rowOverrides             - pipe-delimited override expressions
+  -->
+  <cubeViewsRoot>
+
+    <!-- Optional: business rules referenced by cube views -->
+    <businessRules />
+
+    <cubeViewGroups>
+
+      <!-- Example CubeView group -->
+      <cubeViewGroup
+        name="GroupName"
+        workspace="Default"
+        maintenanceUnit=""
+        description="Description of this cube view group"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <cubeViewItems>
+
+          <!-- Example CubeView item -->
+          <cubeViewItem
+            name="ViewName"
+            description="Description of this view"
+            isVisibleInProfiles="true"
+            isShortcut="false"
+            shortcutCubeViewName=""
+            isDynamic="false">
+
+            <cubeView>
+              <!-- ── Display / Permission Settings ── -->
+              <pageCaption>View Page Caption</pageCaption>
+              <canModifyData>false</canModifyData>
+              <canCalculate>false</canCalculate>
+              <canTranslate>false</canTranslate>
+              <canConsolidate>false</canConsolidate>
+              <canModifySuppression>true</canModifySuppression>
+              <includeCellAttachmentStatus>false</includeCellAttachmentStatus>
+              <useDetailedLogging>false</useDetailedLogging>
+              <headerFormat />
+              <cellFormat />
+              <allowSparseRowSuppression>false</allowSparseRowSuppression>
+              <maxNumUnsuppressedRowsPerCubeViewPage>0</maxNumUnsuppressedRowsPerCubeViewPage>
+              <maxNumSecondsToProcessCubeView>0</maxNumSecondsToProcessCubeView>
+              <formula><![CDATA[]]></formula>
+
+              <!-- ── Report Settings ── -->
+              <reportTaskType>None</reportTaskType>
+              <reportBRName />
+              <reportPaperKind>Letter</reportPaperKind>
+              <reportIsLandscape>true</reportIsLandscape>
+              <reportMarginLeft>0.5</reportMarginLeft>
+              <reportMarginTop>0.5</reportMarginTop>
+              <reportMarginRight>0.5</reportMarginRight>
+              <reportMarginBottom>0.5</reportMarginBottom>
+              <reportAutoFitNumPagesWide>0</reportAutoFitNumPagesWide>
+              <reportScaleFactor>1</reportScaleFactor>
+              <reportAutoFitToPageWidth>false</reportAutoFitToPageWidth>
+              <excelExportDisplayGridlines>false</excelExportDisplayGridlines>
+              <reportTitle />
+              <reportHeaderLeftLabel1 /><reportHeaderLeftLabel2 /><reportHeaderLeftLabel3 /><reportHeaderLeftLabel4 />
+              <reportHeaderCenterLabel1 /><reportHeaderCenterLabel2 /><reportHeaderCenterLabel3 /><reportHeaderCenterLabel4 />
+              <reportHeaderRightLabel1 /><reportHeaderRightLabel2 /><reportHeaderRightLabel3 /><reportHeaderRightLabel4 />
+              <reportFooter>false</reportFooter>
+              <reportFooterLeftLabel1 /><reportFooterLeftLabel2 /><reportFooterLeftLabel3 /><reportFooterLeftLabel4 />
+              <reportFooterCenterLabel1 /><reportFooterCenterLabel2 /><reportFooterCenterLabel3 /><reportFooterCenterLabel4 />
+              <reportFooterRightLabel1 /><reportFooterRightLabel2 /><reportFooterRightLabel3 /><reportFooterRightLabel4 />
+
+              <!-- ── Sharing ── -->
+              <rowSharingType>None</rowSharingType>
+              <cubeViewNameForSharingAllRows />
+              <cubeViewNameForSharingAllRows2 />
+              <colSharingType>None</colSharingType>
+              <cubeViewNameForSharingAllCols />
+              <cubeViewNameForSharingAllCols2 />
+
+              <!-- ── Cube ── -->
+              <cube>
+                <name>CubeName</name>
+              </cube>
+
+              <!-- ── Point of View Members ── -->
+              <povMembers>
+                <entity>
+                  <name>AllEntities</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </entity>
+                <parent>
+                  <name />
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </parent>
+                <consolidation>
+                  <name>Elimination</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </consolidation>
+                <scenario>
+                  <name>Actual</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </scenario>
+                <time>
+                  <name>2024M1</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </time>
+                <view>
+                  <name>Periodic</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </view>
+                <account>
+                  <name>NetIncome</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </account>
+                <flow>
+                  <name>Periodic</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </flow>
+                <origin>
+                  <name>Entered</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </origin>
+                <ic>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ic>
+                <ud1>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud1>
+                <ud2>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud2>
+                <ud3>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud3>
+                <ud4>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud4>
+                <ud5>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud5>
+                <ud6>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud6>
+                <ud7>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud7>
+                <ud8>
+                  <name>[None]</name>
+                  <memberFilter />
+                  <topLevelFilterForNextLevelExp>false</topLevelFilterForNextLevelExp>
+                </ud8>
+              </povMembers>
+
+              <!-- ── Column / Row Header Sizing ── -->
+              <useDefaultColumnHeaders>true</useDefaultColumnHeaders>
+              <columnHeaders>1</columnHeaders>
+              <useDefaultRowHeaders>true</useDefaultRowHeaders>
+              <rowHeaders>1</rowHeaders>
+              <reportColumnIndexForRowHeaders>0</reportColumnIndexForRowHeaders>
+              <reportColumnHeader1Height>20</reportColumnHeader1Height>
+              <reportColumnHeader2Height>0</reportColumnHeader2Height>
+              <reportColumnHeader3Height>0</reportColumnHeader3Height>
+              <reportColumnHeader4Height>0</reportColumnHeader4Height>
+              <reportColumnHeader5Height>0</reportColumnHeader5Height>
+              <reportColumnHeader6Height>0</reportColumnHeader6Height>
+              <rowHeader1Width>150</rowHeader1Width>
+              <rowHeader2Width>0</rowHeader2Width>
+              <rowHeader3Width>0</rowHeader3Width>
+              <rowHeader4Width>0</rowHeader4Width>
+              <rowHeader5Width>0</rowHeader5Width>
+              <rowHeader6Width>0</rowHeader6Width>
+              <excelRowHeader1Width>150</excelRowHeader1Width>
+              <excelRowHeader2Width>0</excelRowHeader2Width>
+              <reportRowHeader1Width>100</reportRowHeader1Width>
+              <reportRowHeader2Width>0</reportRowHeader2Width>
+
+              <!-- ── Culture and Header Text Types ── -->
+              <culture />
+              <headerTextTypes
+                entity="Name"
+                parent="Name"
+                consolidation="Name"
+                scenario="Name"
+                time="Name"
+                view="Name"
+                account="Name"
+                flow="Name"
+                origin="Name"
+                ic="Name"
+                ud1="Name"
+                ud2="Name"
+                ud3="Name"
+                ud4="Name"
+                ud5="Name"
+                ud6="Name"
+                ud7="Name"
+                ud8="Name" />
+
+              <!-- ── Linked Views / Dashboards / Parameters ── -->
+              <linkedCubeViewNames />
+              <linkedDashboardNames />
+              <includeDefaultNavLinkBoundParameterNames>false</includeDefaultNavLinkBoundParameterNames>
+              <boundParameterNames
+                cube=""
+                entity=""
+                parent=""
+                consolidation=""
+                scenario=""
+                time=""
+                view=""
+                account=""
+                flow=""
+                origin=""
+                ic=""
+                ud1=""
+                ud2=""
+                ud3=""
+                ud4=""
+                ud5=""
+                ud6=""
+                ud7=""
+                ud8="" />
+
+              <!-- ── COLUMNS ── -->
+              <columns>
+                <column
+                  name="ColumnName"
+                  shareSettingsFromAnotherCubeView="false"
+                  cubeViewNameForSharing=""
+                  cubeViewColNameForSharing="">
+                  <width>100</width>
+                  <reportWidth>70</reportWidth>
+                  <canModifyData>false</canModifyData>
+                  <colHeaderFormat />
+                  <cellFormat>#,##0.0;</cellFormat>
+                  <cellType>Data</cellType>
+                  <listParameter />
+                  <linkedCubeViewNames />
+                  <linkedDashboardNames />
+                  <memberExpansions>
+                    <memberExpansion>
+                      <primaryDimType>Time</primaryDimType>
+                      <memberFilter>2024M1</memberFilter>
+                      <initialIndentLevel>0</initialIndentLevel>
+                      <suppressZeroCols>false</suppressZeroCols>
+                      <suppressNoDataCols>false</suppressNoDataCols>
+                      <suppressInvalidCols>false</suppressInvalidCols>
+                      <useSuppressionSettingsOnParentCols>false</useSuppressionSettingsOnParentCols>
+                      <zeroSuppressionThreshold />
+                      <useToDetermineRowSuppression>false</useToDetermineRowSuppression>
+                      <allowSparseRowSuppression>false</allowSparseRowSuppression>
+                      <rowOverrides />
+                    </memberExpansion>
+                  </memberExpansions>
+                </column>
+              </columns>
+
+              <!-- ── ROWS ── -->
+              <rows>
+                <row
+                  name="RowName"
+                  shareSettingsFromAnotherCubeView="false"
+                  cubeViewNameForSharing=""
+                  cubeViewRowNameForSharing="">
+                  <height>20</height>
+                  <reportHeight>14</reportHeight>
+                  <canModifyData>false</canModifyData>
+                  <rowHeaderFormat />
+                  <cellFormat />
+                  <cellType>Data</cellType>
+                  <listParameter />
+                  <linkedCubeViewNames />
+                  <linkedDashboardNames />
+                  <memberExpansions>
+                    <memberExpansion>
+                      <primaryDimType>Account</primaryDimType>
+                      <memberFilter>NetIncome</memberFilter>
+                      <initialIndentLevel>0</initialIndentLevel>
+                      <suppressZeroCols>false</suppressZeroCols>
+                      <suppressNoDataCols>false</suppressNoDataCols>
+                      <suppressInvalidCols>false</suppressInvalidCols>
+                      <useSuppressionSettingsOnParentCols>false</useSuppressionSettingsOnParentCols>
+                      <zeroSuppressionThreshold />
+                      <useToDetermineRowSuppression>true</useToDetermineRowSuppression>
+                      <allowSparseRowSuppression>false</allowSparseRowSuppression>
+                      <rowOverrides />
+                    </memberExpansion>
+                  </memberExpansions>
+                </row>
+              </rows>
+
+            </cubeView>
+          </cubeViewItem>
+
+        </cubeViewItems>
+      </cubeViewGroup>
+
+    </cubeViewGroups>
+
+    <!-- CUBE VIEW PROFILE GUIDE:
+         cubeViewProfiles assign cubeViewGroups to workflow profiles/cubes.
+         The profile name is referenced in WorkflowProfiles.xml as the CubeViewProfile attributeValue.
+
+         Structure:
+           <cubeViewProfile name="ProfileName" cubeName="(All)" scenarioTypeName="(All)"
+                            accessGroup="Everyone" maintenanceGroup="Everyone">
+             <members>
+               <member name="CubeViewGroupName" />  <!-- must match a cubeViewGroup name above -->
+             </members>
+           </cubeViewProfile>
+
+         cubeName         : "(All)" or a specific cube name
+         scenarioTypeName : "(All)" or a specific scenario type (Actual | Budget | Forecast | etc.)
+    -->
+    <cubeViewProfiles>
+      <!-- Assigns cube view groups to workflow profiles -->
+      <!-- Add <cubeViewProfile> elements as needed -->
+    </cubeViewProfiles>
+
+  </cubeViewsRoot>
+</OneStreamXF>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    ApplicationSecurityRoles.xml Structure Template
+    =================================================
+    Maps OneStream user groups to application-level security roles.
+
+    Attributes on <role>:
+      name            - display name of the role (e.g. "ReadOnly", "Contributor")
+      accessGroup     - the OneStream group assigned to this role
+      accessGroupType - type of group ("Everyone" | "Administrators" | custom group name)
+  -->
+  <applicationSecurityRolesRoot>
+    <applicationSecurityRoles>
+
+      <!-- ROLE NOTES:
+           name            - label shown in OneStream (e.g. "ReadOnly", "Contributor", "Admin")
+           accessGroup     - must exactly match an existing OneStream security group
+           accessGroupType - typically the same value as accessGroup
+
+           Typical pattern for most applications:
+             ReadOnly    → Everyone          (broad read-only access for all users)
+             Contributor → [DeptGroup]       (data entry for a department/team)
+             Admin       → Administrators    (full control; limited to IT/admin users)
+
+           Groups are managed under Administration > Security > Groups in OneStream.
+      -->
+
+      <!-- Read-only access for all users -->
+      <role name="ReadOnly"
+            accessGroup="Everyone"
+            accessGroupType="Everyone" />
+
+      <!-- Data entry access for a specific user group -->
+      <role name="Contributor"
+            accessGroup="FinanceUsers"
+            accessGroupType="FinanceUsers" />
+
+      <!-- Full administrative access -->
+      <role name="Administrator"
+            accessGroup="Administrators"
+            accessGroupType="Administrators" />
+
+    </applicationSecurityRoles>
+  </applicationSecurityRolesRoot>
+</OneStreamXF>

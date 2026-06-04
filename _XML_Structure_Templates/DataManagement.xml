@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    DataManagement.xml Structure Template
+    ========================================
+    Organizes Data Management steps and sequences into groups.
+
+    dataManagementGroup attributes:
+      name             - unique group name
+      workspace        - workspace this group belongs to
+      maintenanceUnit  - maintenance unit (optional)
+      description      - text description
+      accessGroup      - who can see/run this group
+      maintenanceGroup - who can edit this group
+
+    ── dataManagementStep attributes:
+         name        - unique step name
+         description - text description
+         stepType    - "ClearData" | "ResetScenario" | "ExecuteBusinessRule" | "LoadData"
+
+    ── stepDefinition contains ONE of the following definition elements:
+
+       ClearData stepType → <DataMgmtClearDataDefinition>
+         UseDetailedLogging         - "true" | "false"
+         Cube                       - cube name to clear
+         EntityFilter               - entity filter expression
+         Scenario                   - scenario name
+         TimeFilter                 - time filter expression
+         ProcessImportedData        - "true" | "false"
+         ProcessFormsData           - "true" | "false"
+         ProcessJournalsAndAdjustments - "true" | "false"
+
+       ResetScenario stepType → <DataMgmtResetScenarioDefinition>
+         UseDetailedLogging          - "true" | "false"
+         Scenario                    - scenario name
+         ResetAllTimePeriods         - "true" | "false"
+         StartYear                   - integer year
+         EndYear                     - integer year
+         StartTimePeriodInFirstYear  - time period name (e.g. "M1")
+
+       ExecuteBusinessRule stepType → <DataMgmtExecuteBRDefinition>
+         UseDetailedLogging - "true" | "false"
+         BusinessRuleName   - name of Finance business rule to execute
+         Parameters         - pipe-delimited parameter string
+
+    ── dataManagementSequence attributes:
+         name        - unique sequence name
+         description - text description
+
+    ── sequenceDefinition → <DataMgmtSequenceDefinition>
+         AppServer              - app server name
+         EnableNotifications    - "true" | "false"
+         NotificationServer     - notification server name
+         NotificationEventType  - event type string
+         Parameters → Parameter[]
+           Parameter attributes:
+             SubstVarName - substitution variable name
+           Parameter children:
+             <DefaultValue/> - default value for the parameter
+         stepMembers → stepMember[]
+           stepMember attributes:
+             name - step name to include in the sequence
+  -->
+  <dataManagementRoot>
+    <dataManagementGroups>
+
+      <!-- Example Data Management group -->
+      <dataManagementGroup
+        name="GroupName"
+        workspace="Default"
+        maintenanceUnit=""
+        description="Description of the group"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+
+        <dataManagementSteps>
+
+          <!-- Step 1: ClearData -->
+          <dataManagementStep
+            name="ClearData_StepName"
+            description="Clear cube data before loading"
+            stepType="ClearData">
+            <stepDefinition>
+              <DataMgmtClearDataDefinition>
+                <UseDetailedLogging>false</UseDetailedLogging>
+                <Cube>CubeName</Cube>
+                <EntityFilter>AllEntities</EntityFilter>
+                <Scenario>Actual</Scenario>
+                <TimeFilter>2024M1</TimeFilter>
+                <ProcessImportedData>true</ProcessImportedData>
+                <ProcessFormsData>false</ProcessFormsData>
+                <ProcessJournalsAndAdjustments>false</ProcessJournalsAndAdjustments>
+              </DataMgmtClearDataDefinition>
+            </stepDefinition>
+          </dataManagementStep>
+
+          <!-- Step 2: ResetScenario -->
+          <dataManagementStep
+            name="ResetScenario_StepName"
+            description="Reset scenario data for time range"
+            stepType="ResetScenario">
+            <stepDefinition>
+              <DataMgmtResetScenarioDefinition>
+                <UseDetailedLogging>false</UseDetailedLogging>
+                <Scenario>Budget</Scenario>
+                <ResetAllTimePeriods>false</ResetAllTimePeriods>
+                <StartYear>2024</StartYear>
+                <EndYear>2024</EndYear>
+                <StartTimePeriodInFirstYear>M1</StartTimePeriodInFirstYear>
+              </DataMgmtResetScenarioDefinition>
+            </stepDefinition>
+          </dataManagementStep>
+
+          <!-- Step 3: ExecuteBusinessRule -->
+          <dataManagementStep
+            name="ExecuteBR_StepName"
+            description="Execute a Finance business rule"
+            stepType="ExecuteBusinessRule">
+            <stepDefinition>
+              <DataMgmtExecuteBRDefinition>
+                <UseDetailedLogging>false</UseDetailedLogging>
+                <BusinessRuleName>FinanceRuleName</BusinessRuleName>
+                <Parameters>Param1|Param2</Parameters>
+              </DataMgmtExecuteBRDefinition>
+            </stepDefinition>
+          </dataManagementStep>
+
+          <!-- Step 4: Calculate  (consolidate/translate/calculate a cube)
+               CalculationType options:
+                 Calculate             — run entity calculations only
+                 Translate             — run currency translation only
+                 Consolidate           — run consolidation only
+                 ConsolidateAndTranslate — run both consolidation and translation
+               Substitution variable syntax: |VarName| — values are supplied at runtime
+               Common substitution variables (must be defined in sequence Parameters):
+                 |PovCube|     — cube name from workflow POV
+                 |PovScenario| — scenario name from workflow POV
+                 |PovTime|     — time period from workflow POV
+                 |PovEntity|   — entity name from workflow POV
+               ConsFilter: C#Local | C#Translated | C#<CurrencyCode>
+               EntityFilter/ScenarioFilter/TimeFilter accept member set expressions (E#, S#, T# prefixes)
+          -->
+          <dataManagementStep
+            name="Calculate_StepName"
+            description="Calculate entities for a given cube and scenario"
+            stepType="Calculate">
+            <stepDefinition>
+              <DataMgmtCalculateDefinition>
+                <CalculationType>Calculate</CalculationType>
+                <ExecuteHybridSourceDataCopy>Unknown</ExecuteHybridSourceDataCopy>
+                <Cube>|PovCube|</Cube>
+                <EntityFilter>E#|PovEntity|</EntityFilter>
+                <ParentFilter />
+                <ConsFilter>C#Local</ConsFilter>
+                <ScenarioFilter>S#|PovScenario|</ScenarioFilter>
+                <TimeFilter>T#|PovTime|</TimeFilter>
+              </DataMgmtCalculateDefinition>
+            </stepDefinition>
+          </dataManagementStep>
+
+        </dataManagementSteps>
+
+        <dataManagementSequences>
+
+          <!-- Example sequence that chains steps together -->
+          <dataManagementSequence
+            name="SequenceName"
+            description="Description of the sequence">
+            <sequenceDefinition>
+              <DataMgmtSequenceDefinition>
+                <AppServer>AppServerName</AppServer>
+                <EnableNotifications>false</EnableNotifications>
+                <NotificationServer></NotificationServer>
+                <NotificationEventType></NotificationEventType>
+                <!-- SEQUENCE PARAMETERS:
+                     SubstVarName must match the |VarName| references used in step definitions.
+                     Values are supplied at runtime by:
+                       • Workflow POV (automatically maps PovCube, PovScenario, PovTime, PovEntity)
+                       • Task Scheduler DataMgmtSequenceArgs (pipe-delimited: Value1|Value2)
+                       • Manual run dialog in DM UI
+                -->
+                <Parameters>
+                  <!-- Define substitution variables the sequence accepts -->
+                  <Parameter SubstVarName="SubstVar1">
+                    <DefaultValue>DefaultVal1</DefaultValue>
+                  </Parameter>
+                  <Parameter SubstVarName="SubstVar2">
+                    <DefaultValue>DefaultVal2</DefaultValue>
+                  </Parameter>
+                </Parameters>
+                <stepMembers>
+                  <stepMember name="ClearData_StepName" />
+                  <stepMember name="ExecuteBR_StepName" />
+                </stepMembers>
+              </DataMgmtSequenceDefinition>
+            </sequenceDefinition>
+          </dataManagementSequence>
+
+        </dataManagementSequences>
+
+      </dataManagementGroup>
+
+    </dataManagementGroups>
+  </dataManagementRoot>
+</OneStreamXF>

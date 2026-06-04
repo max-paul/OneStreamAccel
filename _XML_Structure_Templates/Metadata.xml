@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    Metadata.xml Structure Template
+    =================================
+    Contains Finance-type business rules used for metadata calculations.
+    Business rule source code is stored as CDATA (VB.NET or C#).
+
+    businessRule attributes:
+      businessRuleType - always "Finance" in this file
+      name             - unique name for the business rule
+
+    Inner elements:
+      accessGroup             - who can use this rule
+      maintenanceGroup        - who can edit this rule
+      isGlobal                - "true" | "false"
+      businessRuleLanguageType - "VisualBasic" | "CSharp"
+      isEncrypted             - "true" | "false"
+      referencedAssemblies    - child <referencedAssembly> elements
+      sourceCode              - CDATA block containing actual code
+
+    referencedAssembly attributes:
+      isInBusinessRulesAssemblyFolder - "true" | "false"
+      isOtherBusinessRule             - "true" | "false"
+      isWsAssembly                    - "true" | "false"
+      isInEnvironmentSpecialFolder    - "true" | "false"
+      environmentSpecialFolder        - path if special folder
+      assemblyName                    - DLL or assembly name
+  -->
+  <metadataRoot>
+    <businessRules>
+
+      <!-- FINANCE RULE GUIDE:
+           Finance rules are the core calculation engine of OneStream.
+           The FinanceFunctionType (configured in OneStream UI, not in XML) determines when they fire:
+             Consolidation     — runs during cube consolidation
+             Translation       — runs during currency translation
+             Calculate         — runs during entity calculate step
+             Dynamic           — runs when cube view cells are displayed (real-time)
+             Input             — runs when a user submits input data
+             Extended          — general purpose; called from DM steps or other rules
+
+           Key API objects:
+             si       = SessionInfo  (user, app, POV context)
+             globals  = BRGlobals    (shared data store across rules in the same session)
+             api      = FinanceRules (access POV, read/write cell data, member lookups)
+             args     = FinanceArgs  (event context, function type, origin, etc.)
+
+           Namespace pattern: OneStream.BusinessRule.Finance.<RuleName>
+           isGlobal="true" shares the rule across all applications on the server
+           Set isEncrypted="true" only for rules containing credentials (encrypted at rest)
+      -->
+
+      <!-- Finance Business Rule example -->
+      <businessRule businessRuleType="Finance" name="RuleName">
+        <accessGroup>Everyone</accessGroup>
+        <maintenanceGroup>Everyone</maintenanceGroup>
+        <isGlobal>false</isGlobal>
+        <businessRuleLanguageType>VisualBasic</businessRuleLanguageType>
+        <isEncrypted>false</isEncrypted>
+        <referencedAssemblies>
+          <!-- Self-closing if no assemblies needed -->
+          <referencedAssembly
+            isInBusinessRulesAssemblyFolder="false"
+            isOtherBusinessRule="false"
+            isWsAssembly="false"
+            isInEnvironmentSpecialFolder="false"
+            environmentSpecialFolder=""
+            assemblyName="AssemblyName.dll" />
+        </referencedAssemblies>
+        <sourceCode><![CDATA[
+' VB.NET Finance business rule stub
+Imports OneStream.Finance.Engine
+Imports OneStream.Finance.Database
+Namespace OneStream.BusinessRule.Finance.RuleName
+  Public Class MainClass
+    Public Function Main(ByVal si As SessionInfo, ByVal globals As BRGlobals, ByVal api As FinanceRules, ByVal args As FinanceArgs) As Object
+      Try
+        Return Nothing
+      Catch ex As Exception
+        Throw ErrorHandler.LogWrite(si, New XFException(si, ex))
+      End Try
+    End Function
+  End Class
+End Namespace
+        ]]></sourceCode>
+      </businessRule>
+
+    </businessRules>
+  </metadataRoot>
+</OneStreamXF>

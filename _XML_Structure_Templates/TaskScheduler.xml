@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    TaskScheduler.xml Structure Template
+    ======================================
+    Defines scheduled tasks that trigger Data Management sequences.
+
+    NOTE: The root element is double-nested: <taskScheduler><taskScheduler>
+
+    ScheduleItem inner elements:
+      Name                    - display name of the schedule item
+      Description             - optional description
+      UserName                - OneStream user that executes the task
+      DataMgmtSequenceName    - name of the Data Management sequence to run
+      DataMgmtSequenceArgs    - pipe-delimited substitution variable values
+      StartTime               - ISO 8601 datetime (e.g. 2024-01-01T00:00:00)
+      ExpirationTime          - ISO 8601 datetime when schedule expires
+      ManagerName             - manager user name (optional)
+      IsEnabledByManager      - "true" | "false"
+      IsEnabledByUser         - "true" | "false"
+      ItemDefinition          -> scheduling frequency definition
+      NumAllowedFailures      - integer; consecutive failures before disabling
+      EnableRunWindow         - "true" | "false"
+      RunWindowStartTime      - time string "HH:MM"
+      RunWindowEndTime        - time string "HH:MM"
+      UserTimeZoneInfo        - Windows timezone ID (e.g. "Eastern Standard Time")
+
+    ItemDefinition inner elements:
+      ScheduleFrequency           - "Once" | "Daily" | "Weekly" | "Monthly"
+      ScheduleEveryNumMinutes     - minutes between runs (for minute-based freq)
+      ScheduleOccurEveryXDaysWeeks - integer (daily/weekly interval)
+      ScheduleOccurEveryXWeeks    - integer (weekly interval)
+      ScheduleDays                -> <XFDay> elements (Sun|Mon|Tue|Wed|Thu|Fri|Sat)
+      NumericDays                 - comma-separated day numbers (monthly)
+      ScheduleMonths              -> <XFMonth> elements (Jan|Feb|...|Dec)
+      OnWeeksOfMonth              -> <XFOnWeekOfMonth> elements (First|Second|Third|Fourth|Last)
+  -->
+  <taskScheduler>
+    <taskScheduler>
+
+      <!-- Example ScheduleItem -->
+      <ScheduleItem>
+        <Name>ScheduleItemName</Name>
+        <Description>Description of the scheduled task</Description>
+        <UserName>ServiceAccountUser</UserName>
+        <DataMgmtSequenceName>SequenceName</DataMgmtSequenceName>
+        <!-- DataMgmtSequenceArgs: pipe-delimited values matching the sequence Parameter SubstVarName order
+             e.g. if the sequence has SubstVar1 and SubstVar2, use: Value1|Value2 -->
+        <DataMgmtSequenceArgs>Arg1|Arg2</DataMgmtSequenceArgs>
+        <StartTime>2024-01-01T06:00:00</StartTime>
+        <ExpirationTime>2099-12-31T00:00:00</ExpirationTime>
+        <ManagerName></ManagerName>
+        <IsEnabledByManager>true</IsEnabledByManager>
+        <IsEnabledByUser>true</IsEnabledByUser>
+        <ItemDefinition>
+          <ScheduleFrequency>Daily</ScheduleFrequency>
+          <ScheduleEveryNumMinutes>0</ScheduleEveryNumMinutes>
+          <ScheduleOccurEveryXDaysWeeks>1</ScheduleOccurEveryXDaysWeeks>
+          <ScheduleOccurEveryXWeeks>0</ScheduleOccurEveryXWeeks>
+          <ScheduleDays>
+            <!-- Include days to run; remove days not needed -->
+            <XFDay>Mon</XFDay>
+            <XFDay>Tue</XFDay>
+            <XFDay>Wed</XFDay>
+            <XFDay>Thu</XFDay>
+            <XFDay>Fri</XFDay>
+          </ScheduleDays>
+          <NumericDays />
+          <ScheduleMonths>
+            <!-- For monthly schedules, include applicable months -->
+            <XFMonth>Jan</XFMonth>
+            <XFMonth>Feb</XFMonth>
+            <XFMonth>Mar</XFMonth>
+            <XFMonth>Apr</XFMonth>
+            <XFMonth>May</XFMonth>
+            <XFMonth>Jun</XFMonth>
+            <XFMonth>Jul</XFMonth>
+            <XFMonth>Aug</XFMonth>
+            <XFMonth>Sep</XFMonth>
+            <XFMonth>Oct</XFMonth>
+            <XFMonth>Nov</XFMonth>
+            <XFMonth>Dec</XFMonth>
+          </ScheduleMonths>
+          <OnWeeksOfMonth>
+            <!-- For "nth weekday of month" schedules -->
+            <XFOnWeekOfMonth>First</XFOnWeekOfMonth>
+          </OnWeeksOfMonth>
+        </ItemDefinition>
+        <NumAllowedFailures>3</NumAllowedFailures>
+        <EnableRunWindow>false</EnableRunWindow>
+        <RunWindowStartTime>00:00</RunWindowStartTime>
+        <RunWindowEndTime>23:59</RunWindowEndTime>
+        <!-- UserTimeZoneInfo: Windows timezone ID string
+             Common values:
+               Eastern Standard Time | Central Standard Time | Mountain Standard Time | Pacific Standard Time
+               UTC | GMT Standard Time | Romance Standard Time (Paris/Madrid) | Tokyo Standard Time
+               AUS Eastern Standard Time (Sydney) | India Standard Time
+             To list all valid IDs, run in PowerShell:
+               [System.TimeZoneInfo]::GetSystemTimeZones() | Select-Object -ExpandProperty Id
+        -->
+        <UserTimeZoneInfo>Eastern Standard Time</UserTimeZoneInfo>
+      </ScheduleItem>
+
+    </taskScheduler>
+  </taskScheduler>
+</OneStreamXF>

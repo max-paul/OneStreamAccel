@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    WorkflowProfiles.xml Structure Template
+    =========================================
+    Defines workflow profiles (execution units) and their templates.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    WORKFLOW PROFILE attributes:
+      name              - unique profile name
+      parentName        - parent profile name (or empty for root)
+      type              - "CubeRoot" | "Default" | "InputFormsChild"
+                          | "InputAdjChild" | "InputImportChild"
+      cubeName          - cube this profile is associated with
+      inputTemplateName - input form or import template (for child types)
+      accessGroup       - who can access this profile
+      maintenanceGroup  - who can edit this profile
+
+    scenarioType name values:
+      "(Default)" applies to all scenario types not explicitly listed.
+      Other values: Actual, Budget, Forecast, Plan, etc.
+
+    Standard attributeNames:
+      ProfileDescription        - text description
+      Workflow                  - workflow type (e.g. "Standard")
+      WorkflowExecutionGroup    - execution group name
+      WorkspaceDashboardWorkflow - dashboard workflow name
+      Active                    - "Yes" | "No"
+      ICMatchingEnabled         - "Yes" | "No"
+      ICMatchingParameters      - parameters string
+      CubeViewProfile           - cube view profile name
+      ProcessCubeDashboardProfile - dashboard profile for process cube
+      ConfirmationProfile       - name of confirmation profile
+      ConfirmationDashboardProfile - dashboard for confirmation
+      CertificationProfile      - name of certification profile
+      CertificationSignOffGroup - sign-off access group
+      CertificationDashboardProfile - dashboard for certification
+      Text1, Text2, Text3, Text4 - custom text attributes
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    WORKFLOW PROFILE TEMPLATE attributes (same as profile + type):
+      type - "Template" | "TemplateImportChild" | "TemplateFormsChild" | "TemplateAdjChild"
+  -->
+  <workflowProfilesRoot>
+
+    <!-- PROFILE HIERARCHY GUIDE:
+         Typical structure for one cube:
+           CubeRoot (type=CubeRoot, parentName="")
+             └── DefaultChild (type=Default, parentName=CubeRoot)
+                   ├── ImportChild  (type=InputImportChild,  inputTemplateName=DataSourceName)
+                   ├── FormsChild   (type=InputFormsChild,   inputTemplateName=FormTemplateName)
+                   └── AdjChild     (type=InputAdjChild,     inputTemplateName=JournalTemplateName)
+
+         Key rules:
+           • Only one CubeRoot profile per cube
+           • InputImportChild.inputTemplateName must match a dataSource name in DataSources.xml
+           • InputFormsChild.inputTemplateName must match a formTemplate name in FormTemplates.xml
+           • InputAdjChild.inputTemplateName must match a journalTemplate name in JournalTemplates.xml
+           • scenarioType name="(Default)" applies to all scenarios not explicitly overridden
+           • profileEntities: add <profileEntity name="EntityMember"/> to restrict visible entities
+           • CubeViewProfile attributeValue must match a cubeViewProfile name in CubeViews.xml
+           • ConfirmationProfile attributeValue must match a confirmationProfile in ConfirmationRules.xml
+           • CertificationProfile attributeValue must match a certificationProfile in CertificationQuestions.xml
+    -->
+    <workflowProfiles>
+
+      <!-- ── CubeRoot Profile (top-level cube parent) ── -->
+      <workflowProfile
+        name="CubeRootProfileName"
+        parentName=""
+        type="CubeRoot"
+        cubeName="CubeName"
+        inputTemplateName=""
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <scenarioTypes>
+          <scenarioType name="(Default)">
+            <attributes>
+              <attribute attributeName="ProfileDescription"           attributeValue="Description of this profile" />
+              <attribute attributeName="Workflow"                     attributeValue="Standard" />
+              <attribute attributeName="WorkflowExecutionGroup"       attributeValue="" />
+              <attribute attributeName="WorkspaceDashboardWorkflow"   attributeValue="" />
+              <attribute attributeName="Active"                       attributeValue="Yes" />
+              <attribute attributeName="ICMatchingEnabled"            attributeValue="No" />
+              <attribute attributeName="ICMatchingParameters"         attributeValue="" />
+              <attribute attributeName="CubeViewProfile"              attributeValue="" />
+              <attribute attributeName="ProcessCubeDashboardProfile"  attributeValue="" />
+              <attribute attributeName="ConfirmationProfile"          attributeValue="" />
+              <attribute attributeName="ConfirmationDashboardProfile" attributeValue="" />
+              <attribute attributeName="CertificationProfile"         attributeValue="" />
+              <attribute attributeName="CertificationSignOffGroup"    attributeValue="" />
+              <attribute attributeName="CertificationDashboardProfile" attributeValue="" />
+              <attribute attributeName="Text1"                        attributeValue="" />
+              <attribute attributeName="Text2"                        attributeValue="" />
+              <attribute attributeName="Text3"                        attributeValue="" />
+              <attribute attributeName="Text4"                        attributeValue="" />
+            </attributes>
+          </scenarioType>
+          <!-- Add per-scenario overrides as needed:
+          <scenarioType name="Actual">
+            <attributes>
+              <attribute attributeName="Active" attributeValue="Yes" />
+            </attributes>
+          </scenarioType>
+          -->
+        </scenarioTypes>
+        <profileEntities />
+        <profileEntityCalcs />
+      </workflowProfile>
+
+      <!-- ── Default Child Profile ── -->
+      <workflowProfile
+        name="DefaultChildProfileName"
+        parentName="CubeRootProfileName"
+        type="Default"
+        cubeName="CubeName"
+        inputTemplateName=""
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <scenarioTypes>
+          <scenarioType name="(Default)">
+            <attributes>
+              <attribute attributeName="ProfileDescription"           attributeValue="" />
+              <attribute attributeName="Workflow"                     attributeValue="Standard" />
+              <attribute attributeName="WorkflowExecutionGroup"       attributeValue="" />
+              <attribute attributeName="WorkspaceDashboardWorkflow"   attributeValue="" />
+              <attribute attributeName="Active"                       attributeValue="Yes" />
+              <attribute attributeName="ICMatchingEnabled"            attributeValue="No" />
+              <attribute attributeName="ICMatchingParameters"         attributeValue="" />
+              <attribute attributeName="CubeViewProfile"              attributeValue="" />
+              <attribute attributeName="ProcessCubeDashboardProfile"  attributeValue="" />
+              <attribute attributeName="ConfirmationProfile"          attributeValue="" />
+              <attribute attributeName="ConfirmationDashboardProfile" attributeValue="" />
+              <attribute attributeName="CertificationProfile"         attributeValue="" />
+              <attribute attributeName="CertificationSignOffGroup"    attributeValue="" />
+              <attribute attributeName="CertificationDashboardProfile" attributeValue="" />
+              <attribute attributeName="Text1"                        attributeValue="" />
+              <attribute attributeName="Text2"                        attributeValue="" />
+              <attribute attributeName="Text3"                        attributeValue="" />
+              <attribute attributeName="Text4"                        attributeValue="" />
+            </attributes>
+          </scenarioType>
+        </scenarioTypes>
+        <profileEntities />
+        <profileEntityCalcs />
+      </workflowProfile>
+
+      <!-- ── InputImportChild Profile ── -->
+      <workflowProfile
+        name="ImportChildProfileName"
+        parentName="DefaultChildProfileName"
+        type="InputImportChild"
+        cubeName="CubeName"
+        inputTemplateName="DataSourceName"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <scenarioTypes>
+          <scenarioType name="(Default)">
+            <attributes>
+              <attribute attributeName="ProfileDescription"           attributeValue="" />
+              <attribute attributeName="Workflow"                     attributeValue="Standard" />
+              <attribute attributeName="WorkflowExecutionGroup"       attributeValue="" />
+              <attribute attributeName="WorkspaceDashboardWorkflow"   attributeValue="" />
+              <attribute attributeName="Active"                       attributeValue="Yes" />
+              <attribute attributeName="ICMatchingEnabled"            attributeValue="No" />
+              <attribute attributeName="ICMatchingParameters"         attributeValue="" />
+              <attribute attributeName="CubeViewProfile"              attributeValue="" />
+              <attribute attributeName="ProcessCubeDashboardProfile"  attributeValue="" />
+              <attribute attributeName="ConfirmationProfile"          attributeValue="" />
+              <attribute attributeName="ConfirmationDashboardProfile" attributeValue="" />
+              <attribute attributeName="CertificationProfile"         attributeValue="" />
+              <attribute attributeName="CertificationSignOffGroup"    attributeValue="" />
+              <attribute attributeName="CertificationDashboardProfile" attributeValue="" />
+              <attribute attributeName="Text1"                        attributeValue="" />
+              <attribute attributeName="Text2"                        attributeValue="" />
+              <attribute attributeName="Text3"                        attributeValue="" />
+              <attribute attributeName="Text4"                        attributeValue="" />
+            </attributes>
+          </scenarioType>
+        </scenarioTypes>
+        <profileEntities />
+        <profileEntityCalcs />
+      </workflowProfile>
+
+      <!-- ── InputFormsChild Profile ── -->
+      <workflowProfile
+        name="FormsChildProfileName"
+        parentName="DefaultChildProfileName"
+        type="InputFormsChild"
+        cubeName="CubeName"
+        inputTemplateName="FormTemplateName"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <scenarioTypes>
+          <scenarioType name="(Default)">
+            <attributes>
+              <attribute attributeName="ProfileDescription"           attributeValue="" />
+              <attribute attributeName="Workflow"                     attributeValue="Standard" />
+              <attribute attributeName="WorkflowExecutionGroup"       attributeValue="" />
+              <attribute attributeName="WorkspaceDashboardWorkflow"   attributeValue="" />
+              <attribute attributeName="Active"                       attributeValue="Yes" />
+              <attribute attributeName="ICMatchingEnabled"            attributeValue="No" />
+              <attribute attributeName="ICMatchingParameters"         attributeValue="" />
+              <attribute attributeName="CubeViewProfile"              attributeValue="" />
+              <attribute attributeName="ProcessCubeDashboardProfile"  attributeValue="" />
+              <attribute attributeName="ConfirmationProfile"          attributeValue="" />
+              <attribute attributeName="ConfirmationDashboardProfile" attributeValue="" />
+              <attribute attributeName="CertificationProfile"         attributeValue="" />
+              <attribute attributeName="CertificationSignOffGroup"    attributeValue="" />
+              <attribute attributeName="CertificationDashboardProfile" attributeValue="" />
+              <attribute attributeName="Text1"                        attributeValue="" />
+              <attribute attributeName="Text2"                        attributeValue="" />
+              <attribute attributeName="Text3"                        attributeValue="" />
+              <attribute attributeName="Text4"                        attributeValue="" />
+            </attributes>
+          </scenarioType>
+        </scenarioTypes>
+        <profileEntities />
+        <profileEntityCalcs />
+      </workflowProfile>
+
+    </workflowProfiles>
+
+    <workflowProfileTemplates>
+
+      <!-- ── Standard Template (parent template) ── -->
+      <workflowProfileTemplate
+        name="TemplateName"
+        parentName=""
+        type="Template"
+        cubeName="CubeName"
+        inputTemplateName=""
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <scenarioTypes>
+          <scenarioType name="(Default)">
+            <attributes>
+              <attribute attributeName="ProfileDescription"           attributeValue="" />
+              <attribute attributeName="Workflow"                     attributeValue="Standard" />
+              <attribute attributeName="WorkflowExecutionGroup"       attributeValue="" />
+              <attribute attributeName="WorkspaceDashboardWorkflow"   attributeValue="" />
+              <attribute attributeName="Active"                       attributeValue="Yes" />
+              <attribute attributeName="ICMatchingEnabled"            attributeValue="No" />
+              <attribute attributeName="ICMatchingParameters"         attributeValue="" />
+              <attribute attributeName="CubeViewProfile"              attributeValue="" />
+              <attribute attributeName="ProcessCubeDashboardProfile"  attributeValue="" />
+              <attribute attributeName="ConfirmationProfile"          attributeValue="" />
+              <attribute attributeName="ConfirmationDashboardProfile" attributeValue="" />
+              <attribute attributeName="CertificationProfile"         attributeValue="" />
+              <attribute attributeName="CertificationSignOffGroup"    attributeValue="" />
+              <attribute attributeName="CertificationDashboardProfile" attributeValue="" />
+              <attribute attributeName="Text1"                        attributeValue="" />
+              <attribute attributeName="Text2"                        attributeValue="" />
+              <attribute attributeName="Text3"                        attributeValue="" />
+              <attribute attributeName="Text4"                        attributeValue="" />
+            </attributes>
+          </scenarioType>
+        </scenarioTypes>
+      </workflowProfileTemplate>
+
+      <!-- ── TemplateImportChild ── -->
+      <workflowProfileTemplate
+        name="TemplateImportChildName"
+        parentName="TemplateName"
+        type="TemplateImportChild"
+        cubeName="CubeName"
+        inputTemplateName="DataSourceName"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <scenarioTypes>
+          <scenarioType name="(Default)">
+            <attributes>
+              <attribute attributeName="ProfileDescription"           attributeValue="" />
+              <attribute attributeName="Workflow"                     attributeValue="Standard" />
+              <attribute attributeName="Active"                       attributeValue="Yes" />
+              <attribute attributeName="Text1"                        attributeValue="" />
+            </attributes>
+          </scenarioType>
+        </scenarioTypes>
+      </workflowProfileTemplate>
+
+    </workflowProfileTemplates>
+
+  </workflowProfilesRoot>
+</OneStreamXF>

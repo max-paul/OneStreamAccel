@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    JournalTemplates.xml Structure Template
+    =========================================
+    journalTemplateGroup attrs:
+      name, description, accessGroup, maintenanceGroup
+    header attrs (all on journalTemplate/header):
+      name, journalTemplateType (Standard),
+      requirementLevel (Required|Optional),
+      requirementFrequency (Monthly|AllTimePeriods),
+      timeFilterForReqtFreq,
+      canChangeSettings, canChangePov, canChangeLineItems, canChangeAmounts (true|false),
+      journalType (Standard), journalBalanceType (Balanced|Unbalanced),
+      isSingleEntity (true|false), entityMemberFilter,
+      cube, entity, parent, consolidation, account, flow, ic,
+      ud1..ud8,
+      requirementRecurringFrequency, finalPeriodForRecurringJournal (-1 = no end)
+    header children:
+      description (CDATA)
+      JournalHeaderDetail > AllocationOptions (14 child elements)
+      JournalHeaderDetail > JournalComments > Rejected
+    lineItem attrs:
+      cube, entity, parent, consolidation, account, flow, ic, ud1..ud8,
+      amount (decimal), isDebit (true|false)
+    journalTemplateProfiles : self-closing when empty
+  -->
+  <journalTemplatesRoot>
+    <!-- JOURNAL TEMPLATE QUICK REFERENCE:
+         journalTemplateType    : Standard (only valid option in XML)
+         journalType            : Standard | Recurring | Allocating
+         journalBalanceType     : Balanced = debits must equal credits
+                                  Unbalanced = imbalance is allowed
+         consolidation          : Local = entity’s local currency
+                                  Translated = application reporting currency
+                                  Or a specific currency code e.g. USD | EUR | GBP
+         flow                   : TB_EndBal | Periodic | or a specific flow member
+         ic                     : None or an intercompany entity member name
+         ud1..ud8               : None or the UD dimension member name to default
+         canChange* flags       : true = user can override that field when entering the journal
+         isSingleEntity         : true = locked to one entity; false = each line can vary
+         finalPeriodForRecurringJournal: -1 = no end date; or integer period number
+         AllocationType         : Advanced | Basic | None
+         isDebit (on lineItem)  : true = debit entry; false = credit entry
+    -->
+    <journalTemplateGroups>
+      <journalTemplateGroup
+        name="Group Name"
+        description=""
+        accessGroup="Everyone"
+        maintenanceGroup="Administrators">
+        <journalTemplates>
+          <journalTemplate>
+            <header
+              name="Journal Template Name"
+              journalTemplateType="Standard"
+              requirementLevel="Required"
+              requirementFrequency="Monthly"
+              timeFilterForReqtFreq=""
+              canChangeSettings="true"
+              canChangePov="true"
+              canChangeLineItems="true"
+              canChangeAmounts="true"
+              journalType="Standard"
+              journalBalanceType="Balanced"
+              isSingleEntity="true"
+              entityMemberFilter=""
+              cube="CubeName"
+              entity="EntityMember"
+              parent=""
+              consolidation="Local"
+              account=""
+              flow="TB_EndBal"
+              ic=""
+              ud1="" ud2="" ud3="None" ud4="None" ud5="None" ud6="None" ud7="None" ud8="None"
+              requirementRecurringFrequency="AllTimePeriods"
+              finalPeriodForRecurringJournal="-1">
+              <description><![CDATA[Journal description text]]></description>
+              <JournalHeaderDetail>
+                <AllocationOptions>
+                  <AllocationType>Advanced</AllocationType>
+                  <SourcePOVMemberScript />
+                  <SourceCalcScript />
+                  <SourceTransferPOVMemberScript />
+                  <SourceTransferOffsetPOVMemberScript />
+                  <DestPOVMemberScript />
+                  <DimTypeName>Unknown</DimTypeName>
+                  <DestMemberFilter />
+                  <DimTypeName2 />
+                  <DestMemberFilter2 />
+                  <DestOffsetPOVMemberScript />
+                  <WeightCalcScript />
+                  <DestCalcScript>|SourceAmount| * (|Weight| / |TotalWeight|)</DestCalcScript>
+                  <TranslateDestIfDifferentCurrency>true</TranslateDestIfDifferentCurrency>
+                  <SaveZerosAsNoData>true</SaveZerosAsNoData>
+                </AllocationOptions>
+                <JournalComments>
+                  <Rejected />
+                </JournalComments>
+              </JournalHeaderDetail>
+            </header>
+            <lineItems>
+              <lineItem
+                cube="CubeName"
+                entity="EntityMember"
+                parent=""
+                consolidation="Local"
+                account="AccountMember"
+                flow="TB_EndBal"
+                ic="None"
+                ud1="None" ud2="None" ud3="None" ud4="None" ud5="None" ud6="None" ud7="None" ud8="None"
+                amount="0.000000000"
+                isDebit="true" />
+            </lineItems>
+          </journalTemplate>
+        </journalTemplates>
+      </journalTemplateGroup>
+    </journalTemplateGroups>
+    <journalTemplateProfiles />
+  </journalTemplatesRoot>
+</OneStreamXF>

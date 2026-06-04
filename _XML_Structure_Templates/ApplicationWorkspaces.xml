@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    ApplicationWorkspaces.xml Structure Template
+    ===============================================
+    Defines the workspace configuration for the OneStream application.
+    This file can be very large in practice (50MB+) as it contains
+    dashboard layouts, components, cube view profiles, and all workspace content.
+
+    NOTE: This template shows the high-level structure only.
+    The actual file content varies significantly by application.
+
+    ⚠  IMPORTANT: ApplicationWorkspaces.xml should be exported/imported through the
+    OneStream UI (Administration > Application > Export/Import). Hand-coding this
+    file is NOT recommended — in practice it is 50MB+ and contains GUIDs, base64
+    binary content, and deeply nested dashboard component structures.
+    Only make targeted attribute edits to an already-exported file.
+      workspace attributes:
+        name        - workspace name
+        description - text description
+        isDefault   - "true" | "false"
+        accessGroup - access control group
+        maintenanceGroup - maintenance control group
+
+      workspace children:
+        <dashboardGroups>    - groups of dashboard items
+        <cubeViewProfiles>   - CubeView profile assignments
+        <reportBooks>        - report book definitions
+        <workspaceItems>     - individual workspace items
+  -->
+  <workspacesRoot>
+    <workspaces>
+
+      <workspace
+        name="Default"
+        description="Default Workspace"
+        isDefault="true"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <dashboardGroups>
+          <!-- Dashboard groups contain dashboard items and components -->
+          <!-- Structure is complex; see actual ApplicationWorkspaces.xml for detail -->
+        </dashboardGroups>
+        <cubeViewProfiles>
+          <!-- CubeView profiles assigning groups to workflow profiles -->
+        </cubeViewProfiles>
+        <reportBooks>
+          <!-- Report book definitions -->
+        </reportBooks>
+      </workspace>
+
+    </workspaces>
+  </workspacesRoot>
+</OneStreamXF>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    ExtensibilityRules.xml Structure Template
+    ===========================================
+    Contains Extender and DataQualityEventHandler business rules.
+    Source code stored as CDATA (VB.NET or C#).
+
+    businessRule attributes:
+      businessRuleType - "Extender" | "DataQualityEventHandler" | "DashboardExtender"
+      name             - unique name for the business rule
+
+    Inner elements: (same pattern as Metadata.xml businessRules)
+      accessGroup, maintenanceGroup, isGlobal,
+      businessRuleLanguageType, isEncrypted,
+      referencedAssemblies -> referencedAssembly[],
+      sourceCode (CDATA)
+  -->
+  <extensibilityRulesRoot>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       RULE TYPE GUIDE:
+         Extender              — fired on workflow events; set the trigger in OneStream UI
+                                 Common triggers: Submit | Certify | Approve | Lock | Unlock | ImportData
+                                 Namespace: OneStream.BusinessRule.Extender.<Name>
+                                 Signature: Main(si, globals, api As Object, args As ExtenderArgs)
+         DataQualityEventHandler — fired when data quality checks run during workflow steps
+                                 Namespace: OneStream.BusinessRule.DataQualityEventHandler.<Name>
+         DashboardExtender     — handles dashboard component interactions
+                                 (button clicks, grid selections, parameter changes)
+                                 Namespace: OneStream.BusinessRule.DashboardExtender.<Name>
+
+       TIPS:
+         • Use globals.SetValue / globals.GetValue to pass data between rules in the same session
+         • Check args.ExtenderType or args.ActionType to branch logic by trigger event
+         • Set isGlobal="true" only if the rule should be shared across all applications
+  ════════════════════════════════════════════════════════════════ -->
+
+    <!-- Extender Business Rule example -->
+    <businessRule businessRuleType="Extender" name="ExtenderRuleName">
+      <accessGroup>Everyone</accessGroup>
+      <maintenanceGroup>Everyone</maintenanceGroup>
+      <isGlobal>false</isGlobal>
+      <businessRuleLanguageType>VisualBasic</businessRuleLanguageType>
+      <isEncrypted>false</isEncrypted>
+      <referencedAssemblies />
+      <sourceCode><![CDATA[
+' VB.NET Extender business rule stub
+Imports OneStream.Finance.Engine
+Namespace OneStream.BusinessRule.Extender.ExtenderRuleName
+  Public Class MainClass
+    Public Function Main(ByVal si As SessionInfo, ByVal globals As BRGlobals, ByVal api As ExtenderArgs, ByVal args As ExtenderArgs) As Object
+      Try
+        Return Nothing
+      Catch ex As Exception
+        Throw ErrorHandler.LogWrite(si, New XFException(si, ex))
+      End Try
+    End Function
+  End Class
+End Namespace
+      ]]></sourceCode>
+    </businessRule>
+
+    <!-- DataQualityEventHandler Business Rule example -->
+    <businessRule businessRuleType="DataQualityEventHandler" name="DQEventHandlerRuleName">
+      <accessGroup>Everyone</accessGroup>
+      <maintenanceGroup>Everyone</maintenanceGroup>
+      <isGlobal>false</isGlobal>
+      <businessRuleLanguageType>VisualBasic</businessRuleLanguageType>
+      <isEncrypted>false</isEncrypted>
+      <referencedAssemblies />
+      <sourceCode><![CDATA[
+' VB.NET DataQualityEventHandler business rule stub
+      ]]></sourceCode>
+    </businessRule>
+
+  </extensibilityRulesRoot>
+</OneStreamXF>

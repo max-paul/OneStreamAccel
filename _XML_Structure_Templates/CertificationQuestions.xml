@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OneStreamXF version="9.3.0.18429">
+  <!--
+    CertificationQuestions.xml Structure Template
+    ================================================
+    Defines certification groups (questions) and profiles (entity assignments).
+
+    certificationGroup attributes:
+      name              - unique group name
+      description       - text description
+      scenarioTypeName  - scenario type this group applies to (e.g. "Actual")
+      accessGroup       - who can see/use this group
+      maintenanceGroup  - who can edit this group
+
+    certificationQuestion attributes:
+      name                  - unique question name (key)
+      category              - grouping category for the question
+      riskLevel             - risk classification (e.g. "High" | "Medium" | "Low")
+      requirementFrequency  - how often required (e.g. "Annual" | "Quarterly" | "Monthly")
+      timeFilterForReqtFreq - time period filter for the frequency
+      text                  - question text displayed to user
+      responseOptional      - "true" | "false"
+      deactivated           - "true" | "false"
+      deactivatedDate       - ISO date when deactivated
+      displayOrder          - integer sort order
+
+    certificationProfile attributes:
+      name              - unique profile name
+      description       - text description
+      cubeName          - cube this profile is for
+      scenarioTypeName  - scenario type
+      accessGroup       - access control group
+      maintenanceGroup  - maintenance control group
+
+    member attributes:
+      name  - entity/member name to include in the profile
+  -->
+  <certificationQuestionsRoot>
+
+    <certificationGroups>
+
+      <!-- Example certification group with questions -->
+      <certificationGroup
+        name="GroupName"
+        description="Description of the group"
+        scenarioTypeName="Actual"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <certificationQuestions>
+
+          <!-- QUICK REFERENCE:
+               riskLevel options          : High | Medium | Low
+               requirementFrequency       : Annual | Quarterly | Monthly | AllTimePeriods
+               timeFilterForReqtFreq      : blank = all periods; or e.g. M12 = December only
+               responseOptional           : false = must answer before certifying; true = can skip
+               deactivated / deactivatedDate: set deactivated="true" and enter ISO date (2024-06-01) to hide from users
+               displayOrder               : integer; lower numbers appear first in the list
+          -->
+          <certificationQuestion
+            name="QuestionName"
+            category="CategoryName"
+            riskLevel="High"
+            requirementFrequency="Annual"
+            timeFilterForReqtFreq=""
+            text="Question text shown to the end user?"
+            responseOptional="false"
+            deactivated="false"
+            deactivatedDate=""
+            displayOrder="10" />
+
+        </certificationQuestions>
+      </certificationGroup>
+
+    </certificationGroups>
+
+    <certificationProfiles>
+
+      <!-- Example certification profile (entity membership) -->
+      <certificationProfile
+        name="ProfileName"
+        description="Description of the profile"
+        cubeName="CubeName"
+        scenarioTypeName="Actual"
+        accessGroup="Everyone"
+        maintenanceGroup="Everyone">
+        <members>
+          <!-- Each <member name="..."/> refers to a certificationGroup name defined above.
+               Add one member per group you want included in this profile. -->
+          <member name="EntityOrMemberName" />
+        </members>
+      </certificationProfile>
+
+    </certificationProfiles>
+
+  </certificationQuestionsRoot>
+</OneStreamXF>
